@@ -6,7 +6,7 @@ export interface FetchStreamOptions {
   url: string;
   requestInit: RequestInit;
   onmessage: (data: string) => void;
-  ondone?: () => void;
+  ondone?: (data: Array<string>) => void;
   onerror?: (response: Response) => void;
 }
 
@@ -32,7 +32,8 @@ export class FetchStream {
         this.onmessage(event.data);
       }
     });
-
+    const outputChannel = window.createOutputChannel("CodeShell");
+    var responseMessage:Array<string> = [];
     fetch(this.url, this.requestInit)
       .then(response => {
         if (response.status === 200) {
@@ -42,14 +43,19 @@ export class FetchStream {
         }
       }).then(async (readableStream) => {
         for await (const chunk of readableStream) {
-          parser.feed(chunk.toString());
+          const chunkString = chunk.toString();
+          parser.feed(chunkString);
+          responseMessage.push(chunkString);
         }
       }).then(() => {
-        this.ondone?.();
+        this.ondone?.(responseMessage);
       }).catch(error => {
         console.error(error);
         window.showErrorMessage(`${error}`);
         window.setStatusBarMessage(`${error}`, 10000);
+        outputChannel.appendLine("caught error trying to fetch from " + this.url);
+        outputChannel.appendLine(error.message);
+        outputChannel.show(true);
         this.onerror?.(error);
       });
   }

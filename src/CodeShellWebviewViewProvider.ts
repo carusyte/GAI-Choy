@@ -163,10 +163,16 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 			"aiMsgId": chatItem.aiMsgId,
 		};
 		console.log("historyPrompt:", historyPrompt);
-		postEventStream(historyPrompt, (data) => {
+		const modelEnv = vscode.workspace.getConfiguration("CodeShell").get("RunEnvForLLMs") as string;
+		const chatList = this.sessionItem.chatList;
+		postEventStream(historyPrompt, chatList, (data) => {
 			const jsonData = JSON.parse(data);
 			if (jsonData.content) {
 				chatItem.aiMessage.append(jsonData.content);
+			}
+			// for OpenAI API
+			if (jsonData.choises[0]['message']) {
+				chatItem.aiMessage.append(jsonData.choises[0]['message']['content']);
 			}
 			if (jsonData.token) {
 				chatItem.aiMessage.append(jsonData.token.text);
@@ -177,7 +183,17 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 			respData.responseText = chatItem.aiMessage.content;
 			respData.aiMsgId = chatItem.aiMsgId;
 			this._view?.webview.postMessage({ type: "addStreamResponse", value: respData });
-		}, () => {
+		}, (data:Array<string>) => {
+			if ("Azure OpenAI" === modelEnv) {
+				const jsonData = JSON.parse(data.join(''));
+				chatItem.aiMessage.append(jsonData.choices[0].message.content);
+				if (jsonData.id && jsonData.id !== "0") {
+					chatItem.aiMsgId = jsonData.id;
+				}
+				respData.responseText = chatItem.aiMessage.content;
+				respData.aiMsgId = chatItem.aiMsgId;
+				this._view?.webview.postMessage({ type: "addStreamResponse", value: respData });
+			}
 			console.log("generateAnswer.requstsDone:", chatItem.aiMessage.content);
 			this.sessionStore.update(this.sessionItem);
 			this._view?.webview.postMessage({ type: "responseStreamDone", value: respData });

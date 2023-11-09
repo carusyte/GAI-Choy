@@ -40,16 +40,60 @@
           "default": "CPU with llama.cpp",
           "enum": [
             "CPU with llama.cpp",
-            "GPU with TGI toolkit"
+            "GPU with TGI toolkit",
+            "Azure OpenAI"
           ],
           "type": "string",
           "order": 2
+        },
+        "CodeShell.ChatModel": {
+          "description": "The deployed model in Azure OpenAI which will be used for technical conversations.",
+          "default": "gpt-35-turbo-16k",
+          "enum": [
+            "gpt-35-turbo",
+            "gpt-35-turbo-16k",
+            "gpt-4",
+            "gpt-4-32k"
+          ],
+          "type": "string",
+          "order": 3
+        },
+        "CodeShell.CodeCompletionModel": {
+          "description": "The deployed model in Azure OpenAI which will be used for code completions.",
+          "default": "gpt-35-turbo-16k",
+          "enum": [
+            "gpt-35-turbo",
+            "gpt-35-turbo-16k",
+            "gpt-4",
+            "gpt-4-32k"
+          ],
+          "type": "string",
+          "order": 4
+        },
+        "CodeShell.ApiKey": {
+          "description": "The API Key for Azure OpenAI.",
+          "default": "",
+          "type": "string",
+          "order": 5
+        },
+        "CodeShell.ApiVersion": {
+          "description": "The API version for Azure OpenAI.",
+          "default": "2023-05-15",
+          "enum": [
+            "2023-05-15",
+            "2023-06-01-preview",
+            "2023-07-01-preview",
+            "2023-08-01-preview",
+            "2023-09-01-preview"
+          ],
+          "type": "string",
+          "order": 6
         },
         "CodeShell.AutoTriggerCompletion": {
           "description": "Whether or not to automatically trigger completion when typing.",
           "default": true,
           "type": "boolean",
-          "order": 6
+          "order": 7
         },
         "CodeShell.AutoCompletionDelay": {
           "description": "The delay in seconds before automatic code completion triggers.",
@@ -60,7 +104,7 @@
             3
           ],
           "default": 1,
-          "order": 7
+          "order": 8
         },
         "CodeShell.CompletionMaxTokens": {
           "description": "Maximum number of tokens for which suggestions will be displayed",
@@ -73,7 +117,7 @@
             1024
           ],
           "default": 64,
-          "order": 8
+          "order": 9
         },
         "CodeShell.ChatMaxTokens": {
           "description": "Maximum number of tokens for which chat messages will be displayed",
@@ -82,10 +126,12 @@
             1024,
             2048,
             4096,
-            8192
+            8192,
+            16384,
+            32768
           ],
           "default": 2048,
-          "order": 9
+          "order": 10
         }
       }
     },
