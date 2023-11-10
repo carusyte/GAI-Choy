@@ -6,12 +6,78 @@ import { translate } from "./LanguageHelper";
 export interface CompletionResponse {
     "generated_text"?: string;
 }
+export interface OpenAiCompletionResponse {
+    "id": string;
+    "object": string;
+    "created": number;
+    "model": string;
+    "usage": object;
+    "choices": [
+        {
+            "message": {
+                "role": string,
+                "content": string
+            },
+            "finish_reason": string,
+            "index": number
+        }
+    ]
+}
 
-export async function postCompletion(fimPrefixCode: string, fimSuffixCode: string): Promise<string | undefined> {
+export async function postCompletion(fileName: string, fimPrefixCode: string, fimSuffixCode: string): Promise<string | undefined> {
     const serverAddress = workspace.getConfiguration("CodeShell").get("ServerAddress") as string;
     let maxtokens = workspace.getConfiguration("CodeShell").get("CompletionMaxTokens") as number;
-
     const modelEnv = workspace.getConfiguration("CodeShell").get("RunEnvForLLMs") as string;
+    const api_key = workspace.getConfiguration("CodeShell").get("ApiKey") as string;
+    const model = workspace.getConfiguration("CodeShell").get("ChatModel") as string;
+    const api_version = workspace.getConfiguration("CodeShell").get("ApiVersion") as string;
+    
+    if ("Azure OpenAI" == modelEnv) {
+        const prompt = `${fimPrefixCode}${fimSuffixCode}`;
+        let headers = {
+            "Content-Type": "application/json",
+            "api-key": api_key
+        }
+        // ### output_code: <the missing pieces of code fragment or snippet that you, as the assistant is to generate >
+        let data = {
+            "temperature": 0.5,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": `Your role is an AI code interpreter.
+                        Your task is to complete executable and functional code fragments based on the context provided by the user.
+                        The context and metadata of the code fragment will be provided by user in the following format,
+                        as delimited by triple quotes:
+                        '''
+                        ### file_name: <the file name of the program including file extension, which indicates the program type>
+                        ### input_prefix: <prefix of the code fragment>
+                        ### input_suffix: <suffix of the code fragment>
+                        '''
+                        Your mission is to generate code fragments or snippets that completes the code based on given context.
+                        Expectation of the output format:
+                        - Return the code fragments or snippets which can be inserted into the programe file directly and fill in the missing pieces.
+                        - Don't respond in natural language. Just code.
+                        - Unless the file per se is a markdown file, don't wrap the returned code snippet or fragment inside markdown 
+                          script such as fenced code block.
+                        `
+                },
+                {
+                    "role": "user",
+                    "content": `
+                        ### file_name: ${fileName}
+                        ### input_prefix: ${fimPrefixCode}
+                        ### input_suffix: ${fimSuffixCode}
+                    `
+                }
+            ]
+        };
+        console.debug("request.data:", data)
+        const uri = "/openai/deployments/" + model + "/chat/completions?api-version=" + api_version
+        const response = await axiosInstance.post<OpenAiCompletionResponse>(serverAddress + uri, data, {headers: headers});
+        console.debug("response.data:", response.data)
+        return "\n" + response.data.choices[0].message.content;
+    }
+
     if ("CPU with llama.cpp" == modelEnv) {
         let data = {
             "input_prefix": fimPrefixCode, "input_suffix": fimSuffixCode,

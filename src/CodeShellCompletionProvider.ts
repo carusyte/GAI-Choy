@@ -1,6 +1,7 @@
 import { CancellationToken, InlineCompletionContext, InlineCompletionItem, InlineCompletionItemProvider, InlineCompletionList, Position, ProviderResult, Range, TextDocument, window, workspace, StatusBarItem, InlineCompletionTriggerKind } from "vscode";
 import { postCompletion } from "./RequestCompletion";
 import { sleep } from "./Utils";
+import * as path from 'path';
 
 export class CodeShellCompletionProvider implements InlineCompletionItemProvider {
 
@@ -33,7 +34,8 @@ export class CodeShellCompletionProvider implements InlineCompletionItemProvider
 
         this.statusBar.text = "$(loading~spin)";
         this.statusBar.tooltip = "CodeShell - Working";
-        return postCompletion(fimPrefixCode, fimSuffixCode).then((response) => {
+        const fileName = path.basename(document.fileName);
+        return postCompletion(fileName, fimPrefixCode, fimSuffixCode).then((response) => {
             this.statusBar.text = "$(light-bulb)";
             this.statusBar.tooltip = `CodeShell - Ready`;
             if (token.isCancellationRequested || !response || this.isNil(response.trim())) {
@@ -45,6 +47,10 @@ export class CodeShellCompletionProvider implements InlineCompletionItemProvider
             this.statusBar.text = "$(alert)";
             this.statusBar.tooltip = "CodeShell - Error";
             window.setStatusBarMessage(`${error}`, 10000);
+            const outputChannel = window.createOutputChannel("CodeShell");
+            outputChannel.appendLine("caught error trying to perform code completion");
+            outputChannel.appendLine(error);
+            outputChannel.show(true);
             return Promise.resolve(([] as InlineCompletionItem[]));
         }).finally(() => {
         });

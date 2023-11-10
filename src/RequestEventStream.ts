@@ -55,16 +55,23 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
         };
         body = {
             "temperature": 0.8,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": `Your role is an AI pair programming assistant and technical consultant. 
+                        Your task is to answer questions raised by the user as a developer.
+                        - Follow the user's requirements carefully and to the letter. 
+                        - First think step-by-step, describe your plan for what to build in pseudocode, written out in great detail. 
+                        - Then output the code in a single code block. 
+                        - Minimize any other prose. 
+                        - Wait for the users' instruction. 
+                        - Respond in multiple responses/messages so your responses aren't cutoff.`
+                }
+            ]
             // "stream": true,
             // "model": model,
             // "max_tokens": maxtokens,
             // "stop": ["|<end>|", "|end|", "<|endoftext|>", "## human"],
-            "messages": [
-                {
-                    "role": "system",
-                    "content": "Your role is an AI paired programming assistant and technical consultant. Your task is to answer questions raised by the user as a developer."
-                }
-            ]
         };
         for (let item of chatList) {
             if (item.humanMessage.content.length > 0) {
