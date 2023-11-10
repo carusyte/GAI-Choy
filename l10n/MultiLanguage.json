@@ -9,15 +9,15 @@
     },
     "unit_test": {
         "zh-cn": "代码生成单元测试",
-        "en": "Code generation unit test"
+        "en": " code, generate unit tests to enhance its quality"
     },
     "comment": {
         "zh-cn": "代码生成注释",
-        "en": "Code generation comment"
+        "en": " code, enhance its readability and clarity with comments or documents according to best-practices and format"
     },
     "stop_generation": {
         "zh-cn": "停止生成",
-        "en": "Stop Gen"
+        "en": "Stop generating"
     },
     "history": {
         "zh-cn": "历史",
@@ -56,12 +56,12 @@
         "en": "Unknown Language type"
     },
     "security_issue": {
-        "zh-cn": ", 是否存在性能问题，请给出优化建议",
-        "en": ". Is there a security issue"
+        "zh-cn": ", 是否存在安全性问题，请给出优化建议",
+        "en": ". Is there any security issues? Advise and enhance the code if needed."
     },
     "performance_issue": {
-        "zh-cn": ",是否存在安全性问题，请给出优化建议",
-        "en": ". Is there a performance issue"
+        "zh-cn": ",是否存在性能问题，请给出优化建议",
+        "en": ". Is there any performance issues? Advise and enhance the code if needed."
     },
     "check": {
         "zh-cn": "检查以下",
@@ -77,7 +77,7 @@
     },
     "following": {
         "zh-cn": "请为以下",
-        "en": "Please for the following"
+        "en": "Based on the following"
     },
     "optimize_rewrite": {
         "zh-cn": "请优化并重写以下",
@@ -93,11 +93,11 @@
     },
     "optimization_suggestion": {
         "zh-cn": "请给出优化建议",
-        "en": "Please give optimization suggestions"
+        "en": "Provide optimization suggestions"
     },
     "explain": {
         "zh-cn": "请解释以下",
-        "en": "Please explain the following"
+        "en": "Explain the following"
     },
     "select_code": {
         "zh-cn": "请选中一段代码",
@@ -109,7 +109,7 @@
     },
     "how_above_answer": {
         "zh-cn": "这个回答怎么样？",
-        "en": "How about this answer?"
+        "en": "How would you rate this answer?"
     },
     "question": {
         "zh-cn": "问题 :",
