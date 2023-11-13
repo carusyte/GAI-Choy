@@ -3,6 +3,7 @@ import { workspace } from "vscode";
 import { FetchStream } from "./FetchStream";
 import { ChatItem } from "./ChatMemory";
 import AbortController from "abort-controller";
+import CredStorage from "./CredStorage";
 
 let abortController = new AbortController();
 
@@ -11,12 +12,19 @@ export async function stopEventStream() {
 }
 
 export async function postEventStream(prompt: string, chatList: Array<ChatItem>, msgCallback: (data: string) => any, doneCallback: (data: Array<string>) => void, errorCallback: (err: any) => void) {
-    const serverAddress = workspace.getConfiguration("CodeShell").get("ServerAddress") as string;
-    const api_key = workspace.getConfiguration("CodeShell").get("ApiKey") as string;
-    const model = workspace.getConfiguration("CodeShell").get("ChatModel") as string;
-    const api_version = workspace.getConfiguration("CodeShell").get("ApiVersion") as string;
-    const maxtokens = workspace.getConfiguration("CodeShell").get("ChatMaxTokens") as number;
-    const modelEnv = workspace.getConfiguration("CodeShell").get("RunEnvForLLMs") as string;
+    const serverAddress = workspace.getConfiguration("GAIChoy").get("ServerAddress") as string;
+    // const api_key = workspace.getConfiguration("GAIChoy").get("ApiKey") as string;
+    const model = workspace.getConfiguration("GAIChoy").get("ChatModel") as string;
+    const api_version = workspace.getConfiguration("GAIChoy").get("ApiVersion") as string;
+    const maxtokens = workspace.getConfiguration("GAIChoy").get("ChatMaxTokens") as number;
+    const modelEnv = workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
+
+    // get API key from secret storage
+    let api_key = await CredStorage.instance.getApiKey();
+    if (api_key === null || api_key === undefined || api_key === '') {
+        throw new Error("Azure OpenAI API key is not set. Please configure API key in extension settings.");
+    }
+
     var uri = "";
     var body = {};
     var headers = {};
@@ -58,14 +66,17 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
             "messages": [
                 {
                     "role": "system",
-                    "content": `Your role is an AI pair programming assistant and technical consultant. 
+                    "content": `
+                        Your role is an AI pair programming assistant and technical consultant. 
                         Your task is to answer questions raised by the user as a developer.
-                        - Follow the user's requirements carefully and to the letter. 
-                        - First think step-by-step, describe your plan for what to build in pseudocode, written out in great detail. 
-                        - Then output the code in a single code block. 
-                        - Minimize any other prose. 
-                        - Wait for the users' instruction. 
-                        - Respond in multiple responses/messages so your responses aren't cutoff.`
+                        - Follow the user's requirements carefully and to the letter
+                        - Answer in user's natural language.
+                        - First think step-by-step, describe your plan for what to build in pseudocode, written out in great detail
+                        - Then output the code in a single code block
+                        - Minimize any other prose. Be concise.
+                        - Wait for the users' instruction
+                        - Respond in multiple responses/messages so your responses aren't cutoff
+                        `
                 }
             ]
             // "stream": true,

@@ -5,7 +5,7 @@ import { postEventStream, stopEventStream } from "./RequestEventStream";
 import { sleep } from "./Utils";
 import { translate } from "./LanguageHelper";
 export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider {
-	public static readonly viewId = "codeshell.chatView";
+	public static readonly viewId = "gaichoy.chatView";
 	private _view?: vscode.WebviewView;
 	private _extensionUri: vscode.Uri;
 
@@ -95,31 +95,31 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 
 		let humanPrompt = "";
 		switch (command) {
-			case "codeshell.explain_this_code": {
+			case "gaichoy.explain_this_code": {
 				humanPrompt = prompt.createPromptCodeExplain(languageId, selectedText);
 				break;
 			}
-			case "codeshell.improve_this_code": {
+			case "gaichoy.improve_this_code": {
 				humanPrompt = prompt.createPromptCodeImprove(languageId, selectedText);
 				break;
 			}
-			case "codeshell.clean_this_code": {
+			case "gaichoy.clean_this_code": {
 				humanPrompt = prompt.createPromptCodeClean(languageId, selectedText);
 				break;
 			}
-			case "codeshell.generate_comment": {
+			case "gaichoy.generate_comment": {
 				humanPrompt = prompt.createPromptGenerateComment(languageId, selectedText);
 				break;
 			}
-			case "codeshell.generate_unit_test": {
+			case "gaichoy.generate_unit_test": {
 				humanPrompt = prompt.createPromptGenerateUnitTest(languageId, selectedText);
 				break;
 			}
-			case "codeshell.check_performance": {
+			case "gaichoy.check_performance": {
 				humanPrompt = prompt.createPromptCheckPerformance(languageId, selectedText);
 				break;
 			}
-			case "codeshell.check_security": {
+			case "gaichoy.check_security": {
 				humanPrompt = prompt.createPromptCheckSecurity(languageId, selectedText);
 				break;
 			}
@@ -127,7 +127,7 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 
 		// focus gpt activity from activity bar
 		if (!this._view) {
-			await vscode.commands.executeCommand("codeshell.chatView.focus");
+			await vscode.commands.executeCommand("gaichoy.chatView.focus");
 			await sleep(1000);
 		} else {
 			this._view?.show?.(true);
@@ -163,7 +163,7 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 			"aiMsgId": chatItem.aiMsgId,
 		};
 		console.log("historyPrompt:", historyPrompt);
-		const modelEnv = vscode.workspace.getConfiguration("CodeShell").get("RunEnvForLLMs") as string;
+		const modelEnv = vscode.workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
 		const chatList = this.sessionItem.chatList;
 		postEventStream(historyPrompt, chatList, (data) => {
 			const jsonData = JSON.parse(data);

@@ -14,12 +14,12 @@ export class CodeShellCompletionProvider implements InlineCompletionItemProvider
     //@ts-ignore
     // because ASYNC and PROMISE
     public async provideInlineCompletionItems(document: TextDocument, position: Position, context: InlineCompletionContext, token: CancellationToken): ProviderResult<InlineCompletionItem[] | InlineCompletionList> {
-        let autoTriggerEnabled = workspace.getConfiguration("CodeShell").get("AutoTriggerCompletion") as boolean;
+        let autoTriggerEnabled = workspace.getConfiguration("GAIChoy").get("AutoTriggerCompletion") as boolean;
         if (context.triggerKind === InlineCompletionTriggerKind.Automatic) {
             if (!autoTriggerEnabled) {
                 return Promise.resolve(([] as InlineCompletionItem[]));
             }
-            let delay = workspace.getConfiguration("CodeShell").get("AutoCompletionDelay") as number;
+            let delay = workspace.getConfiguration("GAIChoy").get("AutoCompletionDelay") as number;
             await sleep(1000 * delay);
             if (token.isCancellationRequested) {
                 return Promise.resolve(([] as InlineCompletionItem[]));
@@ -33,11 +33,11 @@ export class CodeShellCompletionProvider implements InlineCompletionItemProvider
         }
 
         this.statusBar.text = "$(loading~spin)";
-        this.statusBar.tooltip = "CodeShell - Working";
+        this.statusBar.tooltip = "GAI Choy - Working";
         const fileName = path.basename(document.fileName);
         return postCompletion(fileName, fimPrefixCode, fimSuffixCode).then((response) => {
             this.statusBar.text = "$(light-bulb)";
-            this.statusBar.tooltip = `CodeShell - Ready`;
+            this.statusBar.tooltip = `GAI Choy - Ready`;
             if (token.isCancellationRequested || !response || this.isNil(response.trim())) {
                 return Promise.resolve(([] as InlineCompletionItem[]));
             }
@@ -45,9 +45,9 @@ export class CodeShellCompletionProvider implements InlineCompletionItemProvider
         }).catch((error) => {
             console.error(error);
             this.statusBar.text = "$(alert)";
-            this.statusBar.tooltip = "CodeShell - Error";
+            this.statusBar.tooltip = "GAI Choy - Error";
             window.setStatusBarMessage(`${error}`, 10000);
-            const outputChannel = window.createOutputChannel("CodeShell");
+            const outputChannel = window.createOutputChannel("GAI Choy");
             outputChannel.appendLine("caught error trying to perform code completion");
             outputChannel.appendLine(error);
             outputChannel.show(true);

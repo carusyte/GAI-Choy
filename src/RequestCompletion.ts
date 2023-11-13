@@ -1,10 +1,15 @@
 /* eslint-disable */
-
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { workspace } from "vscode";
 import { translate } from "./LanguageHelper";
+import CredStorage from "./CredStorage";
 export interface CompletionResponse {
     "generated_text"?: string;
+}
+export class OpenAiCompletionRequest {
+    "file_name": string;
+    "input_prefix": string;
+    "input_suffix": string;
 }
 export interface OpenAiCompletionResponse {
     "id": string;
@@ -25,13 +30,19 @@ export interface OpenAiCompletionResponse {
 }
 
 export async function postCompletion(fileName: string, fimPrefixCode: string, fimSuffixCode: string): Promise<string | undefined> {
-    const serverAddress = workspace.getConfiguration("CodeShell").get("ServerAddress") as string;
-    let maxtokens = workspace.getConfiguration("CodeShell").get("CompletionMaxTokens") as number;
-    const modelEnv = workspace.getConfiguration("CodeShell").get("RunEnvForLLMs") as string;
-    const api_key = workspace.getConfiguration("CodeShell").get("ApiKey") as string;
-    const model = workspace.getConfiguration("CodeShell").get("ChatModel") as string;
-    const api_version = workspace.getConfiguration("CodeShell").get("ApiVersion") as string;
-    
+    const serverAddress = workspace.getConfiguration("GAIChoy").get("ServerAddress") as string;
+    let maxtokens = workspace.getConfiguration("GAIChoy").get("CompletionMaxTokens") as number;
+    const modelEnv = workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
+    // const api_key = workspace.getConfiguration("GAIChoy").get("ApiKey") as string;
+    const model = workspace.getConfiguration("GAIChoy").get("ChatModel") as string;
+    const api_version = workspace.getConfiguration("GAIChoy").get("ApiVersion") as string;
+
+    // get API key from secret storage
+    let api_key = await CredStorage.instance.getApiKey();
+    if (api_key === null || api_key === undefined || api_key === '') {
+        throw new Error("Azure OpenAI API key is not set. Please configure API key in extension settings.");
+    }
+
     if ("Azure OpenAI" == modelEnv) {
         const prompt = `${fimPrefixCode}${fimSuffixCode}`;
         let headers = {
@@ -45,37 +56,58 @@ export async function postCompletion(fileName: string, fimPrefixCode: string, fi
                 {
                     "role": "system",
                     "content": `Your role is an AI code interpreter.
-                        Your task is to complete executable and functional code fragments based on the context provided by the user.
+                        Your task is to provide executable and functional code fragments AS-IS, based on the context provided by the user.
                         The context and metadata of the code fragment will be provided by user in the following format,
                         as delimited by triple quotes:
                         '''
-                        ### file_name: <the file name of the program including file extension, which indicates the program type>
-                        ### input_prefix: <prefix of the code fragment>
-                        ### input_suffix: <suffix of the code fragment>
+                        {
+                            "file_name": "the file name of the program including file extension, which indicates the program type",
+                            "code_prefix": "prefix of the code fragment to-be-generated",
+                            "code_suffix": "suffix of the code fragment to-be-generated"
+                        }
                         '''
                         Your mission is to generate code fragments or snippets that completes the code based on given context.
                         Expectation of the output format:
-                        - Return the code fragments or snippets which can be inserted into the programe file directly and fill in the missing pieces.
-                        - Don't respond in natural language. Just code.
-                        - Unless the file per se is a markdown file, don't wrap the returned code snippet or fragment inside markdown 
-                          script such as fenced code block.
+                        - Return the code fragments or snippets which fit in-between the "code_prefix" and "code_suffix" seamlessly.
+                        - The "code_prefix" and "code_suffix" from user's input shall not be included in your response. Only the missing pieces in-between are required.
+                        - Don't respond in natural language. Just program code.
+                        - Don't wrap the returned code snippet or fragment inside markdown script such as fenced code block, 
+                            Unless the file per se is a markdown file (typically with file extension .md),
+                        - When literal text is needed, such as comments or inline documentation, present them in user's natural language
+                        Example request as delimited by triple quotes:
+                        '''
+                            {
+                                "file_name": "fastapi.py",
+                                "input_prefix": "## This module setup API server with fastapi package and accepts request to /greet, which in turn\\n## responds the client with greetings.\\nfrom fastapi import FastAPI",
+                                "input_suffix": "@app.get(""/greet"")\\ndef greet():\\n    return ""Hello, World!"""
+                            }
+                        '''
+                        Expected response as delimited by triple quotes:
+                        '''app = FastAPI()'''
                         `
                 },
                 {
                     "role": "user",
                     "content": `
-                        ### file_name: ${fileName}
-                        ### input_prefix: ${fimPrefixCode}
-                        ### input_suffix: ${fimSuffixCode}
-                    `
+                    {
+                            "file_name": ${JSON.stringify(fileName)},
+                            "input_prefix": ${JSON.stringify(fimPrefixCode)},
+                            "input_suffix": ${JSON.stringify(fimSuffixCode)}
+                    }`
+                    // `
+                    //     ### file_name: ${fileName}
+                    //     ### input_prefix: ${fimPrefixCode}
+                    //     ### your_output: <the output of the generated code fragment that fits in-between 'input_prefix' and 'input_suffix' most
+                    //     ### input_suffix: ${fimSuffixCode}
+                    // `
                 }
             ]
         };
         console.debug("request.data:", data)
         const uri = "/openai/deployments/" + model + "/chat/completions?api-version=" + api_version
-        const response = await axiosInstance.post<OpenAiCompletionResponse>(serverAddress + uri, data, {headers: headers});
+        const response = await axiosInstance.post<OpenAiCompletionResponse>(serverAddress + uri, data, { headers: headers });
         console.debug("response.data:", response.data)
-        return "\n" + response.data.choices[0].message.content;
+        return response.data.choices[0].message.content;
     }
 
     if ("CPU with llama.cpp" == modelEnv) {

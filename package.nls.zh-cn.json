@@ -1,11 +1,12 @@
 {
-    "codeshell.auto_completion_enable.title": "启用 自动触发补全",
-    "codeshell.auto_completion_disable.title": "停用 自动触发补全",
-    "codeshell.explain_this_code.title": "解释 这段代码",
-    "codeshell.improve_this_code.title": "优化 这段代码",
-    "codeshell.clean_this_code.title": "清理 这段代码", 
-    "codeshell.generate_comment.title": "生成 注释",
-    "codeshell.generate_unit_test.title": "生成 单元测试",
-    "codeshell.check_performance.title": "检查 性能问题",
-    "codeshell.check_security.title": "检查 安全性问题"
+    "gaichoy.auto_completion_enable.title": "启用 自动触发补全",
+    "gaichoy.auto_completion_disable.title": "停用 自动触发补全",
+    "gaichoy.explain_this_code.title": "解释 这段代码",
+    "gaichoy.improve_this_code.title": "优化 这段代码",
+    "gaichoy.clean_this_code.title": "清理 这段代码", 
+    "gaichoy.generate_comment.title": "生成 注释",
+    "gaichoy.generate_unit_test.title": "生成 单元测试",
+    "gaichoy.check_performance.title": "检查 性能问题",
+    "gaichoy.check_security.title": "检查 安全性问题",
+    "gaichoy.set_api_key": "设置API Key"
 }

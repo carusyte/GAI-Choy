@@ -1,0 +1,10 @@
+# Notice @2023-11-10, author of GAI-Choy
+
+This work is based off of the Apache 2.0 licensed project https://github.com/WisdomShell/codeshell-vscode
+
+Major modification includes:
+
+- Add support for Azure OpenAI service integration
+- Enhancements and bugfixes
+- Tweaked appearances of the UI
+- Rebranding of the extension

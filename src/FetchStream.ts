@@ -32,7 +32,7 @@ export class FetchStream {
         this.onmessage(event.data);
       }
     });
-    const outputChannel = window.createOutputChannel("CodeShell");
+    const outputChannel = window.createOutputChannel("GAI Choy");
     var responseMessage:Array<string> = [];
     fetch(this.url, this.requestInit)
       .then(response => {

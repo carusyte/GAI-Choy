@@ -1,10 +1,11 @@
 {
-  "name": "codeshell-vscode",
-  "displayName": "CodeShell VSCode Extension",
-  "description": "Coding with CodeShell LLM",
-  "publisher": "WisdomShell",
-  "version": "0.0.4",
+  "name": "gai-choy",
+  "displayName": "GAI Choy",
+  "description": "G̲enerative A̲I̲ empowered, C̲ode H̲elper O̲n Y̲our side. Supports Azure OpenAI or CodeShell as LLM engine.",
+  "publisher": "carusyte",
+  "version": "0.1.0",
   "icon": "assets/logo.png",
+  "pricing": "Free",
   "keywords": [
     "code-suggestion",
     "code-completion",
@@ -12,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/WisdomShell/codeshell-vscode.git"
+    "url": "https://github.com/carusyte/GAI-Choy.git"
   },
   "engines": {
     "vscode": "^1.68.1"
@@ -27,17 +28,17 @@
   "l10n": "./l10n",
   "contributes": {
     "configuration": {
-      "title": "CodeShell",
+      "title": "GAI Choy",
       "properties": {
-        "CodeShell.ServerAddress": {
-          "description": "The address of the CodeShell server to connect to.",
+        "GAIChoy.ServerAddress": {
+          "description": "The address of the Azure OpenAI service endpoint / CodeShell server to connect.",
           "default": "http://127.0.0.1:8080",
           "type": "string",
           "order": 1
         },
-        "CodeShell.RunEnvForLLMs": {
+        "GAIChoy.RunEnvForLLMs": {
           "description": "The environment that should be used for running LLMs.",
-          "default": "CPU with llama.cpp",
+          "default": "Azure OpenAI",
           "enum": [
             "CPU with llama.cpp",
             "GPU with TGI toolkit",
@@ -46,7 +47,7 @@
           "type": "string",
           "order": 2
         },
-        "CodeShell.ChatModel": {
+        "GAIChoy.ChatModel": {
           "description": "The deployed model in Azure OpenAI which will be used for technical conversations.",
           "default": "gpt-35-turbo-16k",
           "enum": [
@@ -58,7 +59,7 @@
           "type": "string",
           "order": 3
         },
-        "CodeShell.CodeCompletionModel": {
+        "GAIChoy.CodeCompletionModel": {
           "description": "The deployed model in Azure OpenAI which will be used for code completions.",
           "default": "gpt-35-turbo-16k",
           "enum": [
@@ -70,13 +71,14 @@
           "type": "string",
           "order": 4
         },
-        "CodeShell.ApiKey": {
-          "description": "The API Key for Azure OpenAI.",
-          "default": "",
-          "type": "string",
+        "GAIChoy.ApiKey": {
+          "description": "Set the API key for Azure OpenAI service",
+          "type": "null",
+          "scope": "application",
+          "markdownDescription": "[Set API Key](command:gaichoy.set_api_key)",
           "order": 5
         },
-        "CodeShell.ApiVersion": {
+        "GAIChoy.ApiVersion": {
           "description": "The API version for Azure OpenAI.",
           "default": "2023-05-15",
           "enum": [
@@ -89,13 +91,13 @@
           "type": "string",
           "order": 6
         },
-        "CodeShell.AutoTriggerCompletion": {
+        "GAIChoy.AutoTriggerCompletion": {
           "description": "Whether or not to automatically trigger completion when typing.",
-          "default": true,
+          "default": false,
           "type": "boolean",
           "order": 7
         },
-        "CodeShell.AutoCompletionDelay": {
+        "GAIChoy.AutoCompletionDelay": {
           "description": "The delay in seconds before automatic code completion triggers.",
           "type": "number",
           "enum": [
@@ -103,10 +105,10 @@
             2,
             3
           ],
-          "default": 1,
+          "default": 2,
           "order": 8
         },
-        "CodeShell.CompletionMaxTokens": {
+        "GAIChoy.CompletionMaxTokens": {
           "description": "Maximum number of tokens for which suggestions will be displayed",
           "type": "number",
           "enum": [
@@ -121,7 +123,7 @@
           "default": 64,
           "order": 9
         },
-        "CodeShell.ChatMaxTokens": {
+        "GAIChoy.ChatMaxTokens": {
           "description": "Maximum number of tokens for which chat messages will be displayed",
           "type": "number",
           "enum": [
@@ -147,107 +149,112 @@
     ],
     "commands": [
       {
-        "command": "codeshell.auto_completion_enable",
-        "title": "%codeshell.auto_completion_enable.title%",
-        "category": "codeshell"
+        "command": "gaichoy.auto_completion_enable",
+        "title": "%gaichoy.auto_completion_enable.title%",
+        "category": "gaichoy"
       },
       {
-        "command": "codeshell.auto_completion_disable",
-        "title": "%codeshell.auto_completion_disable.title%",
-        "category": "codeshell"
+        "command": "gaichoy.auto_completion_disable",
+        "title": "%gaichoy.auto_completion_disable.title%",
+        "category": "gaichoy"
       },
       {
-        "command": "codeshell.explain_this_code",
-        "title": "%codeshell.explain_this_code.title%",
-        "category": "codeshell"
+        "command": "gaichoy.explain_this_code",
+        "title": "%gaichoy.explain_this_code.title%",
+        "category": "gaichoy"
       },
       {
-        "command": "codeshell.improve_this_code",
-        "title": "%codeshell.improve_this_code.title%",
-        "category": "codeshell"
+        "command": "gaichoy.improve_this_code",
+        "title": "%gaichoy.improve_this_code.title%",
+        "category": "gaichoy"
       },
       {
-        "command": "codeshell.clean_this_code",
-        "title": "%codeshell.clean_this_code.title%",
-        "category": "codeshell"
+        "command": "gaichoy.clean_this_code",
+        "title": "%gaichoy.clean_this_code.title%",
+        "category": "gaichoy"
       },
       {
-        "command": "codeshell.generate_comment",
-        "title": "%codeshell.generate_comment.title%",
-        "category": "codeshell"
+        "command": "gaichoy.generate_comment",
+        "title": "%gaichoy.generate_comment.title%",
+        "category": "gaichoy"
       },
       {
-        "command": "codeshell.generate_unit_test",
-        "title": "%codeshell.generate_unit_test.title%",
-        "category": "codeshell"
+        "command": "gaichoy.generate_unit_test",
+        "title": "%gaichoy.generate_unit_test.title%",
+        "category": "gaichoy"
       },
       {
-        "command": "codeshell.check_performance",
-        "title": "%codeshell.check_performance.title%",
-        "category": "codeshell"
+        "command": "gaichoy.check_performance",
+        "title": "%gaichoy.check_performance.title%",
+        "category": "gaichoy"
       },
       {
-        "command": "codeshell.check_security",
-        "title": "%codeshell.check_security.title%",
-        "category": "codeshell"
+        "command": "gaichoy.check_security",
+        "title": "%gaichoy.check_security.title%",
+        "category": "gaichoy"
+      },
+      {
+        "command": "gaichoy.set_api_key",
+        "title": "%gaichoy.set_api_key%",
+        "category": "gaichoy"
       }
     ],
     "submenus": [
       {
-        "id": "codeshell_context_submenu",
-        "label": "CodeShell"
+        "id": "gaichoy_context_submenu",
+        "label": "GAI Choy"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "submenu": "codeshell_context_submenu",
+          "submenu": "gaichoy_context_submenu",
           "group": "navigation"
         }
       ],
-      "codeshell_context_submenu": [
+      "gaichoy_context_submenu": [
         {
-          "command": "codeshell.auto_completion_enable",
+          "command": "gaichoy.auto_completion_enable",
           "group": "group1@1",
-          "when": "!config.CodeShell.AutoTriggerCompletion"
+          "when": "!config.gaichoy.AutoTriggerCompletion"
         },
         {
-          "command": "codeshell.auto_completion_disable",
+          "command": "gaichoy.auto_completion_disable",
           "group": "group1@2",
-          "when": "config.CodeShell.AutoTriggerCompletion"
+          "when": "config.gaichoy.AutoTriggerCompletion"
         },
         {
-          "command": "codeshell.explain_this_code",
+          "command": "gaichoy.explain_this_code",
           "group": "group2@1",
           "when": "editorHasSelection"
         },
         {
-          "command": "codeshell.improve_this_code",
+          "command": "gaichoy.improve_this_code",
           "group": "group2@2",
           "when": "editorHasSelection"
         },
         {
-          "command": "codeshell.clean_this_code",
+          "command": "gaichoy.clean_this_code",
           "group": "group2@3",
           "when": "editorHasSelection"
         },
         {
-          "command": "codeshell.generate_comment",
+          "command": "gaichoy.generate_comment",
           "group": "group3@1",
           "when": "editorHasSelection"
         },
         {
-          "command": "codeshell.generate_unit_test",
+          "command": "gaichoy.generate_unit_test",
           "group": "group3@2",
           "when": "editorHasSelection"
         },
         {
-          "command": "codeshell.check_performance",
+          "command": "gaichoy.check_performance",
           "group": "group4@1",
           "when": "editorHasSelection"
         },
         {
-          "command": "codeshell.check_security",
+          "command": "gaichoy.check_security",
           "group": "group4@2",
           "when": "editorHasSelection"
         }
@@ -256,17 +263,17 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "codeshell_sidebar",
-          "title": "CodeShell",
+          "id": "gaichoy_sidebar",
+          "title": "GAI Choy",
           "icon": "assets/logo.svg"
         }
       ]
     },
     "views": {
-      "codeshell_sidebar": [
+      "gaichoy_sidebar": [
         {
-          "id": "codeshell.chatView",
-          "name": "CodeShell",
+          "id": "gaichoy.chatView",
+          "name": "GAI Choy",
           "type": "webview"
         }
       ]

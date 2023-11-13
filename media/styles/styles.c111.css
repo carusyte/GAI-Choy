@@ -231,8 +231,8 @@ ul {
 
 .questionDiv {
     background: #007ACC;
-    border-radius: 12px 12px 4px 4px;
-    padding: 4px;
+    border-radius: 4px 4px 4px 4px;
+    padding: 8px;
     color: #fff;
     font-weight: 400;
     font-size: var(--font13);
@@ -303,8 +303,8 @@ ul {
 
 .answerDiv {
     background: #44484A;
-    border-radius: 12px 12px 12px 4px;
-    padding: 4px;
+    border-radius: 4px 4px 4px 4px;
+    padding: 8px;
     margin: 0;
     overflow-wrap: anywhere;
     white-space: break-spaces;
