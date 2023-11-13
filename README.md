@@ -1,6 +1,6 @@
 # GAI Choy VSCode Extension
 
-GAI Choy stands for G̲enerative A̲I̲ empowered, C̲ode H̲elper O̲n Y̲our side.
+GAI Choy stands for **G**enerative **AI** empowered, **C**ode **H**elper **O**n **Y**our side.
 
 Gai Choy, also known as Chinese mustard greens, is a type of leafy vegetable having a distinct, pungent flavor that is often described as spicy, slightly bitter, or peppery. Its strong flavor makes it a popular choice for adding depth and complexity to a variety of dishes. Despite its toughness, it becomes tender and more palatable when cooked, making it a versatile ingredient in the kitchen.
 
@@ -22,7 +22,20 @@ Here's an exhuastive list of extensions I tried:
   - Similar to the above. Although it provides audo-code-completion feature, the supported model is limited without plus-subscription.
   <img src="assets/codegpt_autocomplete_provider.png" width="60%" height="60%"/>
 
-## Requirements
+## How to Install the Extension
+
+### Option 1 - Install from Extensions Marketplace
+
+Search "GAI Choy" in your Extensions tab in VSCode and install the plugin from there.
+
+### Option 2 - Offline Installation
+
+1. Download the latest .vsix file from the [Releases](https://github.com/carusyte/GAI-Choy/releases)
+2. Navigate to Extensions tab in your VSCode
+3. Click the "..." button to the top-right
+4. Click "Install from VSIX..." and choose the downloaded .vsix file to install the extension.
+
+## Requirements to Build from Source
 
 - [node](https://nodejs.org/en) version v18 and above
 - Visual Studio Code version 1.68.1 and above
