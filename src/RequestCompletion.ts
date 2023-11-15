@@ -2,14 +2,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { workspace } from "vscode";
 import { translate } from "./LanguageHelper";
-import CredStorage from "./CredStorage";
+import ExtensionResource from "./ExtensionResource";
 export interface CompletionResponse {
     "generated_text"?: string;
-}
-export class OpenAiCompletionRequest {
-    "file_name": string;
-    "input_prefix": string;
-    "input_suffix": string;
 }
 export interface OpenAiCompletionResponse {
     "id": string;
@@ -33,12 +28,11 @@ export async function postCompletion(fileName: string, fimPrefixCode: string, fi
     const serverAddress = workspace.getConfiguration("GAIChoy").get("ServerAddress") as string;
     let maxtokens = workspace.getConfiguration("GAIChoy").get("CompletionMaxTokens") as number;
     const modelEnv = workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
-    // const api_key = workspace.getConfiguration("GAIChoy").get("ApiKey") as string;
     const model = workspace.getConfiguration("GAIChoy").get("ChatModel") as string;
     const api_version = workspace.getConfiguration("GAIChoy").get("ApiVersion") as string;
 
     // get API key from secret storage
-    let api_key = await CredStorage.instance.getApiKey();
+    let api_key = await ExtensionResource.instance.getApiKey();
     if (api_key === null || api_key === undefined || api_key === '') {
         throw new Error("Azure OpenAI API key is not set. Please configure API key in extension settings.");
     }
@@ -62,8 +56,8 @@ export async function postCompletion(fileName: string, fimPrefixCode: string, fi
                         '''
                         {
                             "file_name": "the file name of the program including file extension, which indicates the program type",
-                            "code_prefix": "prefix of the code fragment to-be-generated",
-                            "code_suffix": "suffix of the code fragment to-be-generated"
+                            "code_prefix": "pre-written code fragment before your output to-be-generated",
+                            "code_suffix": "pre-written code fragment after your output to-be-generated"
                         }
                         '''
                         Your mission is to generate code fragments or snippets that completes the code based on given context.
@@ -78,8 +72,8 @@ export async function postCompletion(fileName: string, fimPrefixCode: string, fi
                         '''
                             {
                                 "file_name": "fastapi.py",
-                                "input_prefix": "## This module setup API server with fastapi package and accepts request to /greet, which in turn\\n## responds the client with greetings.\\nfrom fastapi import FastAPI",
-                                "input_suffix": "@app.get(""/greet"")\\ndef greet():\\n    return ""Hello, World!"""
+                                "code_prefix": "## This module setup API server with fastapi package and accepts request to /greet, which in turn\\n## responds the client with greetings.\\nfrom fastapi import FastAPI\\n",
+                                "code_suffix": "@app.get(""/greet"")\\ndef greet():\\n    return ""Hello, World!"""
                             }
                         '''
                         Expected response as delimited by triple quotes:
@@ -91,15 +85,9 @@ export async function postCompletion(fileName: string, fimPrefixCode: string, fi
                     "content": `
                     {
                             "file_name": ${JSON.stringify(fileName)},
-                            "input_prefix": ${JSON.stringify(fimPrefixCode)},
-                            "input_suffix": ${JSON.stringify(fimSuffixCode)}
+                            "code_prefix": ${JSON.stringify(fimPrefixCode)},
+                            "code_suffix": ${JSON.stringify(fimSuffixCode)}
                     }`
-                    // `
-                    //     ### file_name: ${fileName}
-                    //     ### input_prefix: ${fimPrefixCode}
-                    //     ### your_output: <the output of the generated code fragment that fits in-between 'input_prefix' and 'input_suffix' most
-                    //     ### input_suffix: ${fimSuffixCode}
-                    // `
                 }
             ]
         };

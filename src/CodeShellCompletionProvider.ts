@@ -2,6 +2,7 @@ import { CancellationToken, InlineCompletionContext, InlineCompletionItem, Inlin
 import { postCompletion } from "./RequestCompletion";
 import { sleep } from "./Utils";
 import * as path from 'path';
+import ExtensionResource from "./ExtensionResource";
 
 export class CodeShellCompletionProvider implements InlineCompletionItemProvider {
 
@@ -47,10 +48,10 @@ export class CodeShellCompletionProvider implements InlineCompletionItemProvider
             this.statusBar.text = "$(alert)";
             this.statusBar.tooltip = "GAI Choy - Error";
             window.setStatusBarMessage(`${error}`, 10000);
-            const outputChannel = window.createOutputChannel("GAI Choy");
-            outputChannel.appendLine("caught error trying to perform code completion");
-            outputChannel.appendLine(error);
-            outputChannel.show(true);
+            window.showErrorMessage(`${error}`);
+            const xres = ExtensionResource.instance;
+            xres.logMessage("caught error trying to perform code completion");
+            xres.logMessage(error);
             return Promise.resolve(([] as InlineCompletionItem[]));
         }).finally(() => {
         });

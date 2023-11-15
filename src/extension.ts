@@ -4,15 +4,17 @@ import * as vscode from "vscode";
 import { CodeShellCompletionProvider } from "./CodeShellCompletionProvider";
 import { CodeShellWebviewViewProvider } from "./CodeShellWebviewViewProvider";
 import { translate } from "./LanguageHelper";
-import CredStorage from "./CredStorage";
-// import { CredStorage } from "./CredStorage";
+import ExtensionResource from "./ExtensionResource";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
+	ExtensionResource.init(context);
+	ExtensionResource.instance.logMessage("Initializing...");
 	registerCompleteionExtension(context);
 	registerWebviewViewExtension(context);
 	registerSecretStorage(context);
+	ExtensionResource.instance.logMessage("GAI Choy is ready.");
 }
 
 // This method is called when your extension is deactivated
@@ -40,6 +42,7 @@ function registerWebviewViewExtension(context: vscode.ExtensionContext) {
 
 function registerCompleteionExtension(context: vscode.ExtensionContext) {
 	const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+	statusBar.name = "GAI Choy";
 	statusBar.text = "$(lightbulb)";
 	statusBar.tooltip = `GAI Choy - Ready`;
 
@@ -47,8 +50,8 @@ function registerCompleteionExtension(context: vscode.ExtensionContext) {
 		const configuration = vscode.workspace.getConfiguration();
 		const target = vscode.ConfigurationTarget.Global;
 		configuration.update("GAIChoy.AutoTriggerCompletion", enabled, target, false).then(console.error);
-		var msg = enabled ? translate("auto_completion") : translate("disable_auto_completion");
-		vscode.window.showInformationMessage(msg);
+		// var msg = enabled ? translate("auto_completion") : translate("disable_auto_completion");
+		// vscode.window.showInformationMessage(msg);
 		statusBar.show();
 	};
 
@@ -70,10 +73,8 @@ function registerCompleteionExtension(context: vscode.ExtensionContext) {
 }
 
 function registerSecretStorage(context: vscode.ExtensionContext) {
-	CredStorage.init(context);
-	const cs = CredStorage.instance;
+	const cs = ExtensionResource.instance;
 
-	// const secretStorage: vscode.SecretStorage = context.secrets;
 	vscode.commands.registerCommand('gaichoy.set_api_key', async () => {
 		const apiKey: string = await vscode.window.showInputBox({
 			password: true,
@@ -81,7 +82,6 @@ function registerSecretStorage(context: vscode.ExtensionContext) {
 		}) ?? '';
 
 		await cs.storeApiKey(apiKey);
-		// secretStorage.store("gaichoy.aoai_api_key", apiKey);
 	});
 }
 

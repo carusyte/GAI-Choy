@@ -27,6 +27,7 @@ Here's an exhuastive list of extensions I tried:
 ### Option 1 - Install from Extensions Marketplace
 
 Search "GAI Choy" in your Extensions tab in VSCode and install the plugin from there.
+[VS Code Extension - Gai Choy](https://marketplace.visualstudio.com/items?itemName=Carusyte.gai-choy)
 
 ### Option 2 - Offline Installation
 
@@ -39,7 +40,7 @@ Search "GAI Choy" in your Extensions tab in VSCode and install the plugin from t
 
 - [node](https://nodejs.org/en) version v18 and above
 - Visual Studio Code version 1.68.1 and above
-- The [CodeShell](https://github.com/WisdomShell/llama_cpp_for_codeshell) service is running (not required for AOAI integration)
+- *Optional:* The [CodeShell](https://github.com/WisdomShell/llama_cpp_for_codeshell) service is running (not required for AOAI integration)
 
 ## Compile the Plugin
 

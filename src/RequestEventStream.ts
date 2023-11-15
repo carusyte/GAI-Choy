@@ -3,7 +3,7 @@ import { workspace } from "vscode";
 import { FetchStream } from "./FetchStream";
 import { ChatItem } from "./ChatMemory";
 import AbortController from "abort-controller";
-import CredStorage from "./CredStorage";
+import ExtensionResource from "./ExtensionResource";
 
 let abortController = new AbortController();
 
@@ -13,14 +13,13 @@ export async function stopEventStream() {
 
 export async function postEventStream(prompt: string, chatList: Array<ChatItem>, msgCallback: (data: string) => any, doneCallback: (data: Array<string>) => void, errorCallback: (err: any) => void) {
     const serverAddress = workspace.getConfiguration("GAIChoy").get("ServerAddress") as string;
-    // const api_key = workspace.getConfiguration("GAIChoy").get("ApiKey") as string;
     const model = workspace.getConfiguration("GAIChoy").get("ChatModel") as string;
     const api_version = workspace.getConfiguration("GAIChoy").get("ApiVersion") as string;
     const maxtokens = workspace.getConfiguration("GAIChoy").get("ChatMaxTokens") as number;
     const modelEnv = workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
 
     // get API key from secret storage
-    let api_key = await CredStorage.instance.getApiKey();
+    let api_key = await ExtensionResource.instance.getApiKey();
     if (api_key === null || api_key === undefined || api_key === '') {
         throw new Error("Azure OpenAI API key is not set. Please configure API key in extension settings.");
     }

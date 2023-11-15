@@ -1,6 +1,7 @@
 import fetch, { RequestInit, Response } from "node-fetch";
 import { createParser, ParsedEvent, ReconnectInterval } from "eventsource-parser";
 import { window } from "vscode";
+import ExtensionResource from "./ExtensionResource";
 
 export interface FetchStreamOptions {
   url: string;
@@ -32,7 +33,7 @@ export class FetchStream {
         this.onmessage(event.data);
       }
     });
-    const outputChannel = window.createOutputChannel("GAI Choy");
+    const xres = ExtensionResource.instance;
     var responseMessage:Array<string> = [];
     fetch(this.url, this.requestInit)
       .then(response => {
@@ -53,12 +54,9 @@ export class FetchStream {
         console.error(error);
         window.showErrorMessage(`${error}`);
         window.setStatusBarMessage(`${error}`, 10000);
-        outputChannel.appendLine("caught error trying to fetch from " + this.url);
-        outputChannel.appendLine(error.message);
-        outputChannel.show(true);
+        xres.logMessage("caught error trying to fetch from " + this.url);
+        xres.logMessage(error.message);
         this.onerror?.(error);
       });
   }
-
-
 }
