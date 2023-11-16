@@ -58,12 +58,26 @@ export class CodeShellCompletionProvider implements InlineCompletionItemProvider
     }
 
     private getFimPrefixCode(document: TextDocument, position: Position): string {
+        const modelEnv = workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
+        
+        if ("Azure OpenAI" === modelEnv){
+            const range = new Range(0, 0, position.line, position.character);
+            return document.getText(range);
+        }
+
         const firstLine = Math.max(position.line - 100, 0);
         const range = new Range(firstLine, 0, position.line, position.character);
         return document.getText(range).trim();
     }
 
     private getFimSuffixCode(document: TextDocument, position: Position): string {
+        const modelEnv = workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
+
+        if ("Azure OpenAI" === modelEnv) {
+            const range = new Range(position.line, position.character, document.lineCount, 0);
+            return document.getText(range);
+        }
+
         const startLine = position.line + 1;
         const endLine = Math.min(startLine + 10, document.lineCount);
         const range = new Range(position.line, position.character, endLine, 0);

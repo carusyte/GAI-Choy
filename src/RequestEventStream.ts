@@ -70,6 +70,7 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
                         Your task is to answer questions raised by the user as a developer.
                         - Follow the user's requirements carefully and to the letter
                         - Answer in user's natural language.
+                        - Don't use excessive line breaks between paragraphs.
                         - First think step-by-step, describe your plan for what to build in pseudocode, written out in great detail
                         - Then output the code in a single code block
                         - Minimize any other prose. Be concise.

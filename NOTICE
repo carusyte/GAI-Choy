@@ -6,5 +6,6 @@ Major modification includes:
 
 - Add support for Azure OpenAI service integration
 - Enhancements and bugfixes
+  - Intake entire program file as context instead of a few lines of code only
 - Tweaked appearances of the UI
 - Rebranding of the extension

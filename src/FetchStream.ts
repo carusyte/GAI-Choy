@@ -43,6 +43,7 @@ export class FetchStream {
           return Promise.reject(response);
         }
       }).then(async (readableStream) => {
+        // read strings from readableStream chunk by chunk and feed into parser, push into responseMessage
         for await (const chunk of readableStream) {
           const chunkString = chunk.toString();
           parser.feed(chunkString);
