@@ -66,9 +66,6 @@ Expectation of the output format:
 - The code fragment should be returned AS-IS without being double quoted.
 - The "code_prefix" and "code_suffix" from user's input shall not be included in your response. Only the missing pieces in-between are required.
 - Don't respond in natural language with prose. Just program code.
-- Indentation: adjust, offset, prepend each line of your generated code fragment with needed indentation (whitespaces or tabs).
-  You may infer the required indentation from the last couple lines in the given "code_prefix",
-  and the first couple lines of the given "code_suffix".
 - Don't wrap the returned code snippet or fragment inside markdown script such as fenced code block, 
   Unless the file per se is a markdown file (typically with file extension .md),
 - When literal text is needed, such as comments or inline documentation, present them in user's natural language

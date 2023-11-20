@@ -42,7 +42,8 @@ export class CodeShellCompletionProvider implements InlineCompletionItemProvider
             if (token.isCancellationRequested || !response || this.isNil(response.trim())) {
                 return Promise.resolve(([] as InlineCompletionItem[]));
             }
-            return [new InlineCompletionItem(response, new Range(position, position))];
+            let indentedResponse = this.indent(response, document, position);
+            return [new InlineCompletionItem(indentedResponse, new Range(position, position))];
         }).catch((error) => {
             console.error(error);
             this.statusBar.text = "$(alert)";
@@ -55,6 +56,30 @@ export class CodeShellCompletionProvider implements InlineCompletionItemProvider
             return Promise.resolve(([] as InlineCompletionItem[]));
         }).finally(() => {
         });
+    }
+
+    private indent(snippet: string, document: TextDocument, position: Position): string{
+        //Indent each line of input snippet with the required indentation.
+        //Needed indentation can be inferred from the curent line of the document.
+        let lines = snippet.split("\n");
+        let currentLine = document.lineAt(position.line).text;
+        if (currentLine === null || currentLine === ""){
+            return snippet;
+        }
+        // infer how many indentation (either whitespaces or tabs or both) is in current line
+        let indentations = currentLine.match(/^\s*/) as RegExpMatchArray;
+        if (indentations === null || indentations.length === 0){
+            return snippet;
+        }
+        let indentation = indentations[0];
+        // prepend indentation to each lines except the first line.
+        let indentedLines = lines.map((line, index) => {
+            if (index === 0){
+                return line;
+            }
+            return indentation + line;
+        });
+        return indentedLines.join("\n");
     }
 
     private getFimPrefixCode(document: TextDocument, position: Position): string {
