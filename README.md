@@ -20,7 +20,7 @@ Here's an exhuastive list of extensions I tried:
   - Not open sourced
 - [Code GPT](https://marketplace.visualstudio.com/items?itemName=DanielSanMedium.dscodegpt)
   - Similar to the above. Although it provides audo-code-completion feature, the supported model is limited without plus-subscription.<br/>
-  ![codegpt](assets/codegpt_autocomplete_provider.png)
+  ![codegpt](./assets/codegpt_autocomplete_provider.png)
   <!-- <img src="assets/codegpt_autocomplete_provider.png" width="60%" height="60%"/> -->
 
 ## How to Install the Extension
@@ -84,7 +84,7 @@ To use Azure OpenAI service as the LLM model, there're additional parameters tha
 - API Key
 - API version
 
-![settings](assets/settings.png)
+![settings](./assets/settings.png)
 <!-- <img src="assets/settings.png" width="60%" height="60%" /> -->
 
 ## Features
@@ -98,7 +98,7 @@ During the coding process, code completion suggestions can automatically trigger
 
 When the plugin provides code suggestions, the suggested content appears in gray at the editor's cursor position. You can press the Tab key to accept the suggestion or continue typing to ignore it.
 
-![code completions](assets/code_completions.png)
+![code completions](./assets/code_completions.png)
 <!-- <img src="assets/code_completions.png" width="60%" height="60%" /> -->
 
 ### 2. Code Assistance
@@ -109,7 +109,7 @@ When the plugin provides code suggestions, the suggested content appears in gray
 
 In the VSCode sidebar, open the plugin's Q&A interface. Select a portion of code in the editor, right-click to access the CodeShell menu, and choose the corresponding function. The plugin will provide relevant responses in the Q&A interface.
 
-![code assistance](assets/code_assistance.png)
+![code assistance](./assets/code_assistance.png)
 <!-- <img src="assets/code_assistance.png" width="80%" height="80%" /> -->
 
 ### 3. Code Q&A
@@ -121,7 +121,7 @@ In the VSCode sidebar, open the plugin's Q&A interface. Select a portion of code
 - Request Fresh Responses for Any Question
 - Interrupt During the Answering Process
 
-![technical chat](assets/tech_chat.png)
+![technical chat](./assets/tech_chat.png)
 <!-- <img src="assets/tech_chat.png" width="80%" height="80%" /> -->
 
 Within the Q&A interface's code block, you can click the copy button to copy the code block or use the insert button to insert the code block's content at the editor's cursor location.
