@@ -52,11 +52,10 @@ export class FetchStream {
       }).then(() => {
         this.ondone?.(responseMessage);
       }).catch(error => {
-        console.error(error);
         window.showErrorMessage(`${error}`);
         window.setStatusBarMessage(`${error}`, 10000);
-        xres.logMessage("caught error trying to fetch from " + this.url);
-        xres.logMessage(error.message);
+        xres.errorMessage("caught error trying to fetch from " + this.url);
+        xres.errorMessage(error.message);
         this.onerror?.(error);
       });
   }

@@ -10,11 +10,11 @@ import ExtensionResource from "./ExtensionResource";
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
 	ExtensionResource.init(context);
-	ExtensionResource.instance.logMessage("Initializing...");
+	ExtensionResource.instance.infoMessage("Initializing...");
 	registerCompleteionExtension(context);
 	registerWebviewViewExtension(context);
 	registerSecretStorage(context);
-	ExtensionResource.instance.logMessage("GAI Choy is ready.");
+	ExtensionResource.instance.infoMessage("GAI Choy is ready.");
 }
 
 // This method is called when your extension is deactivated

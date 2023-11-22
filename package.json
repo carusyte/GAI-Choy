@@ -3,7 +3,7 @@
   "displayName": "GAI Choy",
   "description": "G̲enerative A̲I̲ empowered, C̲ode H̲elper O̲n Y̲our side. Supports Azure OpenAI or CodeShell as LLM engine.",
   "publisher": "carusyte",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "icon": "assets/logo.png",
   "pricing": "Free",
   "keywords": [
@@ -136,6 +136,12 @@
           ],
           "default": 2048,
           "order": 10
+        },
+        "GAIChoy.EnableDebugMessage": {
+          "description": "Prints debug message to extension output.",
+          "type": "boolean",
+          "default": false,
+          "order": 11
         }
       }
     },

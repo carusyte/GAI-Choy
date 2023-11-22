@@ -4,6 +4,7 @@ import { ChatItem, HumanMessage, AIMessage, SessionItem, SessionStore } from "./
 import { postEventStream, stopEventStream } from "./RequestEventStream";
 import { sleep } from "./Utils";
 import { translate } from "./LanguageHelper";
+import ExtensionResource from "./ExtensionResource";
 export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider {
 	public static readonly viewId = "gaichoy.chatView";
 	private _view?: vscode.WebviewView;
@@ -162,7 +163,7 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 			"responseText": chatItem.aiMessage.content,
 			"aiMsgId": chatItem.aiMsgId,
 		};
-		console.log("historyPrompt:", historyPrompt);
+		ExtensionResource.instance.debugMessage("historyPrompt: " + historyPrompt);
 		const modelEnv = vscode.workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
 		const chatList = this.sessionItem.chatList;
 		postEventStream(historyPrompt, chatList, (data) => {
@@ -194,7 +195,7 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 				respData.aiMsgId = chatItem.aiMsgId;
 				this._view?.webview.postMessage({ type: "addStreamResponse", value: respData });
 			}
-			console.log("generateAnswer.requstsDone:", chatItem.aiMessage.content);
+			ExtensionResource.instance.debugMessage("generateAnswer.requstsDone: " + chatItem.aiMessage.content);
 			this.sessionStore.update(this.sessionItem);
 			this._view?.webview.postMessage({ type: "responseStreamDone", value: respData });
 			vscode.window.showInformationMessage(translate("answer_completed"));

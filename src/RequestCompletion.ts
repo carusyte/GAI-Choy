@@ -96,10 +96,10 @@ Expected response as delimited by triple quotes:
                 }
             ]
         };
-        console.debug("request.data:", data)
+        ExtensionResource.instance.debugMessage("request.data: " + data)
         const uri = "/openai/deployments/" + model + "/chat/completions?api-version=" + api_version
         const response = await axiosInstance.post<OpenAiCompletionResponse>(serverAddress + uri, data, { headers: headers });
-        console.debug("response.data:", response.data)
+        ExtensionResource.instance.debugMessage("response.data: " + response.data)
         return response.data.choices[0].message.content;
     }
 
@@ -109,7 +109,7 @@ Expected response as delimited by triple quotes:
             "n_predict": maxtokens, "temperature": 0.2, "repetition_penalty": 1.0, "top_k": 10, "top_p": 0.95,
             "stop": ["|<end>|", "|end|", "<|endoftext|>", "## human"]
         };
-        console.debug("request.data:", data)
+        ExtensionResource.instance.debugMessage("request.data:" + data);
         const response = await axiosInstance.post(serverAddress + "/infill", data);
         var content = "";
         const respData = response.data as string;
@@ -119,7 +119,7 @@ Expected response as delimited by triple quotes:
                 content += JSON.parse(chunk.substring(5)).content
             }
         }
-        console.debug("response.data:", content)
+        ExtensionResource.instance.debugMessage("response.data:" + content);
         return content.replace("<|endoftext|>", "");
     }
     if ("GPU with TGI toolkit" == modelEnv) {
@@ -131,11 +131,11 @@ Expected response as delimited by triple quotes:
                 "stop": ["|<end>|", "|end|", "<|endoftext|>", "## human"]
             }
         };
-        console.debug("request.data:", data)
+        ExtensionResource.instance.debugMessage("request.data:" + data);
         const uri = "/generate"
         // const uri = "/codeshell-code/completion"
         const response = await axiosInstance.post<CompletionResponse>(serverAddress + uri, data);
-        console.debug("response.data:", response.data)
+        ExtensionResource.instance.debugMessage("response.data:" + response.data);
         return response.data.generated_text?.replace("<|endoftext|>", "");
     }
 }
