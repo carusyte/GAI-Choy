@@ -4,7 +4,7 @@ GAI Choy stands for **G**enerative **AI** empowered, **C**ode **H**elper **O**n 
 
 Gai Choy, also known as Chinese mustard greens, is a type of leafy vegetable having a distinct, pungent flavor that is often described as spicy, slightly bitter, or peppery. Its strong flavor makes it a popular choice for adding depth and complexity to a variety of dishes. Despite its toughness, it becomes tender and more palatable when cooked, making it a versatile ingredient in the kitchen.
 
-![GAI Choy Icon](./assets/logo.png)
+![GAI Choy Icon](assets\logo.png)
 
 This project is forked from [codeshell-vscode](https://github.com/WisdomShell/codeshell-vscode), with additional support for Azure OpenAI (AOAI) service integration and a couple of other enhancements. See [NOTICE](NOTICE) for more details.
 
