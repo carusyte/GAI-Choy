@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as prompt from "./CreatePrompt";
 import { ChatItem, HumanMessage, AIMessage, SessionItem, SessionStore } from "./ChatMemory";
 import { postEventStream, stopEventStream } from "./RequestEventStream";
-import { sleep } from "./Utils";
+import { sleep, escapeHtml } from "./Utils";
 import { translate } from "./LanguageHelper";
 import ExtensionResource from "./ExtensionResource";
 export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider {
@@ -192,7 +192,7 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 			respData.responseText = chatItem.aiMessage.content;
 			respData.aiMsgId = chatItem.aiMsgId;
 			this._view?.webview.postMessage({ type: "addStreamResponse", value: respData });
-		}, (data:Array<string>) => {
+		}, (data: Array<string>) => {
 			if ("Azure OpenAI" === modelEnv) {
 				const jsonData = JSON.parse(data.join(''));
 				chatItem.aiMessage.append(jsonData.choices[0].message.content);
@@ -246,11 +246,12 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 
 	private _makeHistoryItemDiv(sessionItem: SessionItem) {
 		const sessionTime = sessionItem.time.toLocaleString();
+		const title = escapeHtml(sessionItem.title);
 
 		return `
 			<div class="session" id="${sessionItem.id}">
 				<div class="session-item">
-					<p class="session-title"> ${sessionItem.title} </p>
+					<p class="session-title"> ${title} </p>
 					<p class="session-date-time"> ${sessionTime} </p>
 				</div>
 				<div class="session-options inner-btns ant-dropdown-trigger">

@@ -49,7 +49,7 @@
     chatContainer.appendChild(div);
 
     let questionDiv = document.getElementById(`questionDiv${eventData.contentIndex}`);
-    html = showdownConverter.makeHtml(eventData.question);
+    html = showdownConverter.makeHtml(escapeHTML(eventData.question));
     questionDiv.innerHTML = html;
     hljs.highlightAll();
 
@@ -231,7 +231,7 @@
     for (let i = 0; i < eventData.chatList.length; i++) {
       let question = eventData.chatList[i].humanMessage.content;
       let answer = eventData.chatList[i].aiMessage.content;
-      qHtml = showdownConverter.makeHtml(question);
+      qHtml = showdownConverter.makeHtml(escapeHTML(question));
       document.getElementById(`questionDiv${i}`).innerHTML = qHtml;
       aHtml = showdownConverter.makeHtml(answer);
       document.getElementById(`outputDiv${i}`).innerHTML = aHtml;
@@ -385,5 +385,21 @@
     }
   }
 
+  // a helper function to escape html input string such that it can be safely displayed as-is,
+  // avoid HTML hijack attack.
+  function escapeHTML(unsafeText) {
+      return unsafeText.replace(/[&<"']/g, function(m) {
+          switch (m) {
+            case '&':
+              return '&amp;';
+            case '<':
+              return '&lt;';
+            case '"':
+              return '&quot;';
+            default:
+              return '&#039;';
+          }
+        });
+  }
 
 })();
