@@ -8,5 +8,6 @@
     "gaichoy.generate_unit_test.title": "生成 单元测试",
     "gaichoy.check_performance.title": "检查 性能问题",
     "gaichoy.check_security.title": "检查 安全性问题",
-    "gaichoy.set_api_key": "设置API Key"
+    "gaichoy.set_api_key": "设置API Key",
+    "gaichoy.clear_chat_history": "清空聊天记录"
 }

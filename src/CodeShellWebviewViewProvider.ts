@@ -67,6 +67,10 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 					this.sessionItemDelete(data.value);
 					break;
 				}
+				case "sessionDeleteAll": {
+					this.sessionStore.deleteAll();
+					break;
+				}
 				case "regenerateThisAnswer": {
 					this.generateAnswer(data.value);
 					break;
@@ -77,6 +81,10 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 				}
 			}
 		});
+	}
+
+	public async clearChatHistory() {
+		this.sessionStore.deleteAll();
 	}
 
 	public async executeCommand(command: string) {

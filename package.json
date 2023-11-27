@@ -142,6 +142,13 @@
           "type": "boolean",
           "default": false,
           "order": 11
+        },
+        "GAIChoy.ClearChatHistory": {
+          "description": "Clear the chat history",
+          "type": "null",
+          "scope": "application",
+          "markdownDescription": "[Clear chat history](command:gaichoy.clear_chat_history)",
+          "order": 12
         }
       }
     },
@@ -202,6 +209,11 @@
       {
         "command": "gaichoy.set_api_key",
         "title": "%gaichoy.set_api_key%",
+        "category": "gaichoy"
+      },
+      {
+        "command": "gaichoy.clear_chat_history",
+        "title": "%gaichoy.clear_chat_history%",
         "category": "gaichoy"
       }
     ],

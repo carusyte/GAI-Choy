@@ -8,5 +8,6 @@
     "gaichoy.generate_unit_test.title": "Generate Unit Test",
     "gaichoy.check_performance.title": "Check Performance",
     "gaichoy.check_security.title": "Check Security",
-    "gaichoy.set_api_key": "Set API Key"
+    "gaichoy.set_api_key": "Set API Key",
+    "gaichoy.clear_chat_history": "Clear Chat History"
 }

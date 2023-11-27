@@ -115,6 +115,10 @@ export class SessionStore {
         this._extensionContext.globalState.update(this._storeKey, sessionHistory);
     }
 
+    deleteAll() {
+        this._extensionContext.globalState.update(this._storeKey, new Array<SessionItem>());
+    }
+
     delete(deleteItem: SessionItem) {
         const sessionHistory = this.getSessionHistory();
         const newArray = new Array<SessionItem>();

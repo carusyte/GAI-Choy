@@ -37,6 +37,15 @@ function registerWebviewViewExtension(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand("gaichoy.generate_unit_test", () => provider.executeCommand("gaichoy.generate_unit_test")),
 		vscode.commands.registerCommand("gaichoy.check_performance", () => provider.executeCommand("gaichoy.check_performance")),
 		vscode.commands.registerCommand("gaichoy.check_security", () => provider.executeCommand("gaichoy.check_security")),
+		vscode.commands.registerCommand('gaichoy.clear_chat_history', async () => {
+			vscode.window.showWarningMessage("Confirm to delete all chat history?", "Confirm", "Cancel").then(
+				choice => {
+					if (choice === "Confirm"){
+						provider.clearChatHistory();
+					}
+				}
+			);
+		})
 	);
 }
 
