@@ -316,8 +316,8 @@
     const textarea = event.target;
     console.debug("event.key =", event.key, ", event.keyCode = ", event.keyCode);
     console.debug(navigator.userAgent);
-    let isMac = /macintosh|mac os x/i.test(navigator.userAgent);  
-    let isWin = /windows|win32|win64/i.test(navigator.userAgent); 
+    let isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+    let isWin = /windows|win32|win64/i.test(navigator.userAgent);
     let isLinux = /linux/i.test(navigator.userAgent);
     console.debug(`isMac=${isMac}, isWin=${isWin}, isLinux=${isLinux}`);
 
@@ -385,21 +385,43 @@
     }
   }
 
-  // a helper function to escape html input string such that it can be safely displayed as-is,
-  // avoid HTML hijack attack.
-  function escapeHTML(unsafeText) {
-      return unsafeText.replace(/[&<"']/g, function(m) {
-          switch (m) {
-            case '&':
-              return '&amp;';
-            case '<':
-              return '&lt;';
-            case '"':
-              return '&quot;';
-            default:
-              return '&#039;';
-          }
-        });
+  // This function is used to escape HTML in string
+  function escapeHTML(text) {
+    /* 
+      Step 1: first check if there're any fenced code blocks in the input text (
+      which is typically embraced by triple backticks). For each of the fenced code blocks,
+      temporarily move them out of input text, but remembers where they are positioned,
+      we need to insert them back into where they were after text processing.
+
+      Step 2: Next, escape HTML key characters for the pre-processed input text.
+      
+      Step 3: Finally, add the fenced code blocks back to where they were in the output text from step 2.
+    */
+
+    // Step 1: process fenced code blocks
+    let fencedCodeBlocks = [];
+    let processedText = text.replace(/(```[\s\S]*?```)/g, (match) => {
+      fencedCodeBlocks.push(match);
+      //replace with fenced code block placeholders
+      return "```[fcb_ph-" + fencedCodeBlocks.length + "]";
+    });
+
+    // Step 2: escape HTML key characters
+    const htmlEntities = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    };
+    processedText = processedText.replace(/[&<>'"]/g, match => htmlEntities[match]);
+    
+    // Step 3: add fenced code blocks back
+    let finalText = processedText.replace(/```\[fcb_ph-[0-9]+\]/g, (match) => {
+      return fencedCodeBlocks.length > 0 ? fencedCodeBlocks.shift() : match;
+    });
+
+    return finalText;
   }
 
 })();
