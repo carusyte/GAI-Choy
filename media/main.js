@@ -389,7 +389,7 @@
   function escapeHTML(text) {
     /* 
       Step 1: first check if there're any fenced code blocks in the input text (
-      which is typically embraced by triple backticks). For each of the fenced code blocks,
+      which is typically surrounded by triple backticks). For each of the fenced code blocks,
       temporarily move them out of input text, but remembers where they are positioned,
       we need to insert them back into where they were after text processing.
 

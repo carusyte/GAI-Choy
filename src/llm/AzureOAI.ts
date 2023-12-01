@@ -50,7 +50,7 @@ export class AzureOAI {
                     "role": "system",
                     "content": `Your role is an AI code interpreter.
 Your task is to provide executable and functional code fragments AS-IS, based on the context provided by the user.
-The context and metadata of the code fragment will be provided by user in the following format, as embraced by triple backticks (actual input 
+The context and metadata of the code fragment will be provided by user in the following format, as surrounded by triple backticks (actual input 
 does not contain the triple backticks):
 \`\`\`
 {
@@ -60,7 +60,7 @@ does not contain the triple backticks):
 }
 \`\`\`
 
-You must reply the generated code in a JSON format, as embraced by triple backticks (your response shall not include the triple backticks):
+You must reply the generated code in a JSON format, as surrounded by triple backticks (your response shall not include the triple backticks):
 \`\`\`
 {
     "generated_code": "the code to be generated"

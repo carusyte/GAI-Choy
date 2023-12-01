@@ -172,8 +172,19 @@ body.body-y-scroll {
 
 ul {
     padding: 0;
-    margin: 0;
-    list-style-type: disc
+    margin-left: 40px;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-right: 0;
+    list-style-type: disc;
+    line-height: normal
+}
+
+ol {
+    list-style-type: decimal;
+    margin-bottom: 0;
+    margin-left: 40px;
+    line-height: normal
 }
 
 .placeholder-example {

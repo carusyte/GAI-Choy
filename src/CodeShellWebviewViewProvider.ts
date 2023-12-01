@@ -346,7 +346,8 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 		const mainScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "main.js"));
 		const hightlightUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "scripts", "highlight.min.js"));
 		const showdownUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "scripts", "showdown.min.js"));
-		const tailwindUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "scripts", "tailwind.min.js"));
+		// const tailwindUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "scripts", "tailwind.min.js"));
+		const tailwindUri = '';
 
 		const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "styles"));
 
@@ -358,10 +359,11 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 		<head>
 			<meta charset="UTF-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<script src="${tailwindUri}"></script>
+			<!--<script src="${tailwindUri}"></script>-->
 			<script src="${showdownUri}"></script>
 			<script src="${hightlightUri}"></script>
 		
+			<link href="${styleUri}/tailwind.css" rel="stylesheet" type="text/css" />
 			<link href="${styleUri}/styles.771a66d94c0526be.css" rel="stylesheet" type="text/css" />
 			<link href="${styleUri}/styles.c48.css" rel="stylesheet" type="text/css" />
 			<link href="${styleUri}/styles.c100.css" rel="stylesheet" type="text/css" />
@@ -370,7 +372,6 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 			<link href="${styleUri}/styles.c111.css" rel="stylesheet" type="text/css" />
 			<link href="${styleUri}/styles.c116.css" rel="stylesheet" type="text/css" />
 			<link href="${styleUri}/styles.c117.css" rel="stylesheet" type="text/css" />
-		
 		
 			<style type="text/css">
 				.hljs-ln {
