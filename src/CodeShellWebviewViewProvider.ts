@@ -352,7 +352,6 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 
 		const historySessionItems = this._makeHistoryDiv();
 
-
 		return `<!DOCTYPE html>
 		<html lang="en">
 		

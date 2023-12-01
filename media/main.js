@@ -415,7 +415,7 @@
       "'": '&#39;'
     };
     processedText = processedText.replace(/[&<>'"]/g, match => htmlEntities[match]);
-    
+
     // Step 3: add fenced code blocks back
     let finalText = processedText.replace(/```\[fcb_ph-[0-9]+\]/g, (match) => {
       return fencedCodeBlocks.length > 0 ? fencedCodeBlocks.shift() : match;
