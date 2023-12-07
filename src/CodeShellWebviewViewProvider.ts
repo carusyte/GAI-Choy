@@ -345,7 +345,9 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 
 		const mainScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "main.js"));
 		const hightlightUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "scripts", "highlight.min.js"));
-		const showdownUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "scripts", "showdown.min.js"));
+		// showdown cannot seem to convert nested list with proper indentation.
+		// const markdownUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "scripts", "showdown.min.js"));
+		const markdownUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "scripts", "markdown-it.min.js"));
 		// const tailwindUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "scripts", "tailwind.min.js"));
 		const tailwindUri = '';
 
@@ -360,7 +362,7 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 			<meta charset="UTF-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0">
 			<!--<script src="${tailwindUri}"></script>-->
-			<script src="${showdownUri}"></script>
+			<script src="${markdownUri}"></script>
 			<script src="${hightlightUri}"></script>
 		
 			<link href="${styleUri}/tailwind.css" rel="stylesheet" type="text/css" />

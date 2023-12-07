@@ -6,12 +6,19 @@
 (function () {
   const vscode = acquireVsCodeApi();
 
-  const showdownConverter = new showdown.Converter({
-    omitExtraWLInCodeBlocks: true,
-    simplifiedAutoLink: true,
-    excludeTrailingPunctuationFromURLs: true,
-    literalMidWordUnderscores: true,
-    simpleLineBreaks: true
+  /* Showdown cannot seem to convert nested list with proper indentation. */
+  // const showdownConverter = new showdown.Converter({
+  //   omitExtraWLInCodeBlocks: true,
+  //   simplifiedAutoLink: true,
+  //   excludeTrailingPunctuationFromURLs: true,
+  //   literalMidWordUnderscores: true,
+  //   simpleLineBreaks: true
+  // });
+
+  const md = window.markdownit({
+    html: false,
+    linkify: true,
+    typographer: true
   });
 
   // Handle messages sent from the extension to the webview
@@ -49,7 +56,8 @@
     chatContainer.appendChild(div);
 
     let questionDiv = document.getElementById(`questionDiv${eventData.contentIndex}`);
-    html = showdownConverter.makeHtml(escapeHTML(eventData.question));
+    // html = showdownConverter.makeHtml(escapeHTML(eventData.question));
+    html = md.render(eventData.question);
     questionDiv.innerHTML = html;
     hljs.highlightAll();
 
@@ -62,7 +70,8 @@
     const contentIndex = eventData.contentIndex;
     const responseText = fixCodeBlocks(eventData.responseText);
 
-    const html = showdownConverter.makeHtml(responseText);
+    // const html = showdownConverter.makeHtml(responseText);
+    const html = md.render(responseText);
     const outputDiv = document.getElementById(`outputDiv${contentIndex}`);
     outputDiv.innerHTML = null;
     outputDiv.innerHTML = html;
@@ -231,9 +240,11 @@
     for (let i = 0; i < eventData.chatList.length; i++) {
       let question = eventData.chatList[i].humanMessage.content;
       let answer = eventData.chatList[i].aiMessage.content;
-      qHtml = showdownConverter.makeHtml(escapeHTML(question));
+      // qHtml = showdownConverter.makeHtml(escapeHTML(question));
+      qHtml = md.render(question);
       document.getElementById(`questionDiv${i}`).innerHTML = qHtml;
-      aHtml = showdownConverter.makeHtml(answer);
+      // aHtml = showdownConverter.makeHtml(answer);
+      aHtml = md.render(answer);
       document.getElementById(`outputDiv${i}`).innerHTML = aHtml;
 
       questionEditBtn(i, question);

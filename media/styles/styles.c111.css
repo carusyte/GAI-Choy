@@ -172,7 +172,7 @@ body.body-y-scroll {
 
 ul {
     padding: 0;
-    margin-left: 40px;
+    margin-left: 2rem;
     margin-top: 0;
     margin-bottom: 0;
     margin-right: 0;
@@ -183,7 +183,7 @@ ul {
 ol {
     list-style-type: decimal;
     margin-bottom: 0;
-    margin-left: 40px;
+    margin-left: 2rem;
     line-height: normal
 }
 
