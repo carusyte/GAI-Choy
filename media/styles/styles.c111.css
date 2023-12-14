@@ -170,21 +170,21 @@ body.body-y-scroll {
     padding: 12px 10px
 }
 
-ul {
-    padding: 0;
-    margin-left: 2rem;
-    margin-top: 0;
+div.questionDiv ul,
+div.answerDiv ul {
     margin-bottom: 0;
-    margin-right: 0;
     list-style-type: disc;
-    line-height: normal
 }
 
-ol {
+div.questionDiv ol,
+div.answerDiv ol {
     list-style-type: decimal;
     margin-bottom: 0;
-    margin-left: 2rem;
-    line-height: normal
+}
+
+div.questionDiv li,
+div.answerDiv li {
+    white-space: initial;
 }
 
 .placeholder-example {

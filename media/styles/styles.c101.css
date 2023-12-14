@@ -139,12 +139,6 @@ body.body-y-scroll {
     padding: 12px 10px
 }
 
-ul {
-    padding: 0;
-    margin: 0;
-    list-style-type: none
-}
-
 .placeholder-example {
     font-size: var(--font12)
 }

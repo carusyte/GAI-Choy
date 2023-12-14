@@ -365,7 +365,7 @@ export class CodeShellWebviewViewProvider implements vscode.WebviewViewProvider 
 			<script src="${markdownUri}"></script>
 			<script src="${hightlightUri}"></script>
 		
-			<link href="${styleUri}/tailwind.css" rel="stylesheet" type="text/css" />
+			<!-- <link href="${styleUri}/tailwind.css" rel="stylesheet" type="text/css" /> -->
 			<link href="${styleUri}/styles.771a66d94c0526be.css" rel="stylesheet" type="text/css" />
 			<link href="${styleUri}/styles.c48.css" rel="stylesheet" type="text/css" />
 			<link href="${styleUri}/styles.c100.css" rel="stylesheet" type="text/css" />
