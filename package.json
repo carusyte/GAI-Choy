@@ -1,9 +1,9 @@
 {
   "name": "gai-choy",
   "displayName": "GAI Choy",
-  "description": "G̲enerative A̲I̲ empowered, C̲ode H̲elper O̲n Y̲our side. Supports Azure OpenAI or CodeShell as LLM engine.",
+  "description": "G̲enerative A̲I̲ empowered, C̲ode H̲elper O̲n Y̲our side. Yet another Copilot for coding, with built-in integration capability with Azure OpenAI models or, local LLM such as CodeShell.",
   "publisher": "carusyte",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "icon": "assets/logo.png",
   "pricing": "Free",
   "keywords": [

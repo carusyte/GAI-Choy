@@ -1,6 +1,6 @@
 # GAI Choy VSCode Extension
 
-GAI Choy stands for **G**enerative **AI** empowered, **C**ode **H**elper **O**n **Y**our side.
+GAI Choy stands for **G**enerative **AI** empowered, **C**ode **H**elper **O**n **Y**our side. Yet another Copilot for coding, with built-in integration capability with Azure OpenAI models or, local LLM such as CodeShell.
 
 Gai Choy, also known as Chinese mustard greens, is a type of leafy vegetable having a distinct, pungent flavor that is often described as spicy, slightly bitter, or peppery. Its strong flavor makes it a popular choice for adding depth and complexity to a variety of dishes. Despite its toughness, it becomes tender and more palatable when cooked, making it a versatile ingredient in the kitchen.
 

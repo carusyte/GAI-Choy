@@ -114,7 +114,14 @@ Expected response in JSON format:
         ExtensionResource.instance.debugMessage("response.data: " + response.data)
         const content = response.data.choices[0].message.content;
         ExtensionResource.instance.debugMessage("response.data.choices[0].message.content: " + content)
-        let contentJSON = JSON.parse(content);
+        let contentJSON = JSON.parse(AzureOAI.trimTripleBackticks(content));
         return contentJSON.generated_code;
+    }
+
+    static trimTripleBackticks(str: string){
+        if (str.startsWith('```') && str.endsWith('```')) {
+            return str.slice(3, -3);
+        }
+        return str;
     }
 }
