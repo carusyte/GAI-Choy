@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Agent } from "https";
 import { workspace } from "vscode";
 import { FetchStream } from "./FetchStream";
 import { ChatItem } from "./ChatMemory";
@@ -17,6 +18,7 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
     const api_version = workspace.getConfiguration("GAIChoy").get("ApiVersion") as string;
     const maxtokens = workspace.getConfiguration("GAIChoy").get("ChatMaxTokens") as number;
     const modelEnv = workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
+    const allowSelfSignedCert = workspace.getConfiguration("GAIChoy").get("AllowSelfSignedCert") as boolean
 
     // get API key from secret storage
     let api_key = await ExtensionResource.instance.getApiKey();
@@ -34,8 +36,8 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
             "Content-Type": "application/json",
         };
         body = {
-            "prompt": "|<end>|" + prompt, "n_predict": maxtokens, 
-            "temperature": 0.8, "repetition_penalty": 1.2, "top_k":40,  "top_p":0.95, "stream": true, 
+            "prompt": "|<end>|" + prompt, "n_predict": maxtokens,
+            "temperature": 0.8, "repetition_penalty": 1.2, "top_k": 40, "top_p": 0.95, "stream": true,
             "stop": ["|<end>|", "|end|", "<|endoftext|>", "## human"]
         };
     }
@@ -49,7 +51,7 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
             "inputs": prompt,
             "parameters": {
                 "max_new_tokens": maxtokens,
-                "temperature": 0.6, "repetition_penalty": 1.2, "top_p": 0.95, "do_sample": true, 
+                "temperature": 0.6, "repetition_penalty": 1.2, "top_p": 0.95, "do_sample": true,
                 "stop": ["|<end>|", "|end|", "<|endoftext|>", "## human"]
             }
         };
@@ -108,14 +110,29 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
         }
     }
     abortController = new AbortController();
-    new FetchStream({
-        url: serverAddress + uri,
-        requestInit: {
+    var requestInit = {}
+    // Enable option to trust self-signed certificate
+    if (allowSelfSignedCert) {
+        requestInit = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body),
+            signal: abortController.signal,
+            agent: new Agent({
+                rejectUnauthorized: false
+            })
+        }
+    } else {
+        requestInit = {
             method: "POST",
             headers: headers,
             body: JSON.stringify(body),
             signal: abortController.signal
-        },
+        }
+    }
+    new FetchStream({
+        url: serverAddress + uri,
+        requestInit: requestInit,
         onmessage: msgCallback,
         ondone: doneCallback,
         onerror: errorCallback

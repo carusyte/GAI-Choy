@@ -1,5 +1,6 @@
 /* eslint-disable */
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import {Agent} from "https"
 import { workspace } from "vscode";
 import { translate } from "./LanguageHelper";
 import ExtensionResource from "./ExtensionResource";
@@ -13,6 +14,11 @@ export async function postCompletion(fileName: string, fimPrefixCode: string, fi
     const serverAddress = workspace.getConfiguration("GAIChoy").get("ServerAddress") as string;
     let maxtokens = workspace.getConfiguration("GAIChoy").get("CompletionMaxTokens") as number;
     const modelEnv = workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
+    const allowSelfSignedCert = workspace.getConfiguration("GAIChoy").get("AllowSelfSignedCert") as boolean
+
+    if (allowSelfSignedCert) {
+        axios.defaults.httpsAgent = new Agent({ rejectUnauthorized: false });
+    }
 
     if ("Azure OpenAI" == modelEnv) {
         return AzureOAI.completeCode(fileName, fimPrefixCode, fimSuffixCode, axiosInstance);
