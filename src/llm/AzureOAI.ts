@@ -30,6 +30,7 @@ export class AzureOAI {
         const serverAddress = workspace.getConfiguration("GAIChoy").get("ServerAddress") as string;
         const model = workspace.getConfiguration("GAIChoy").get("ChatModel") as string;
         const api_version = workspace.getConfiguration("GAIChoy").get("ApiVersion") as string;
+        const parameters = workspace.getConfiguration("GAIChoy").get("ApiParameters") as string;
 
         // get API key from secret storage
         let api_key = await ExtensionResource.instance.getApiKey();
@@ -43,15 +44,15 @@ export class AzureOAI {
             "api-key": api_key
         }
 
-        let data = {
+        var data: any = {
             "temperature": 0.2,
             "messages": [
                 {
                     "role": "system",
-                    "content": `Your role is an AI code interpreter.
+                    "content": `Your role is an AI code generator.
 Your task is to provide executable and functional code fragments AS-IS, based on the context provided by the user.
-The context and metadata of the code fragment will be provided by user in the following format, as surrounded by triple backticks (actual input 
-does not contain the triple backticks):
+The context and metadata of the code fragment will be provided by user in the following format, as surrounded by triple-backticks.
+Actual input from user will exclude the beginning and trailing triple-backticks:
 \`\`\`
 {
     "file_name": "the file name of the program including file extension, which indicates the program type",
@@ -60,7 +61,8 @@ does not contain the triple backticks):
 }
 \`\`\`
 
-You must reply the generated code in a JSON format, as surrounded by triple backticks (your response shall not include the triple backticks):
+You must reply the generated code in a JSON format, as illustrated in the following code block (your final output
+MUST not include the beginning and trailing triple-backticks. Reply in JSON format):
 \`\`\`
 {
     "generated_code": "the code to be generated"
@@ -108,20 +110,62 @@ Expected response in JSON format:
                 }
             ]
         };
+
+        this.mergeParameters(data, parameters)
+
+        // Conditionally add "response_format": {"type": "json_object"} to the data variable if api_version equals '2023-12-01-preview'.
+        data = api_version === '2023-12-01-preview' ? {
+             ...data, response_format: { type: 'json_object' } 
+             } : data
+
         ExtensionResource.instance.debugMessage("request.data: " + data)
         const uri = "/openai/deployments/" + model + "/chat/completions?api-version=" + api_version
         const response = await axiosInstance.post<OpenAiCompletionResponse>(serverAddress + uri, data, { headers: headers });
         ExtensionResource.instance.debugMessage("response.data: " + response.data)
         const content = response.data.choices[0].message.content;
         ExtensionResource.instance.debugMessage("response.data.choices[0].message.content: " + content)
-        let contentJSON = JSON.parse(AzureOAI.trimTripleBackticks(content));
+        let contentJSON = JSON.parse(this.trimTripleBackticks(content));
         return contentJSON.generated_code;
     }
 
     static trimTripleBackticks(str: string){
-        if (str.startsWith('```') && str.endsWith('```')) {
-            return str.slice(3, -3);
+        // if the str starts or ends with triple backticks, remove them
+        return str.replace(/^\`{3}|\`{3}$/g, '');
+    }
+
+    // Function to attempt converting a string to its appropriate type
+    static parseValue(value: string): any {
+        value = value.trim();
+
+        // Check if the value is numeric
+        if (!isNaN(value as any) && value !== '') {
+            return parseFloat(value);
         }
-        return str;
+
+        // Check if the value is a quoted string and remove quotes
+        const match = value.match(/^'(.*)'$/);
+        if (match) {
+            return match[1];
+        }
+
+        // Return the value as is for any other case (e.g. booleans or unquoted strings)
+        return value;
+    }
+
+    static mergeParameters(data: any, parameters: string) {
+        if (parameters) {
+            // Define the type for the accumulator object
+            type ParamMapType = { [key: string]: any };
+
+            const paramMap = parameters.split(';')
+                .filter(p => p)
+                .map(p => p.split('='))
+                .reduce((acc: ParamMapType, [key, value]) => {
+                    acc[key.trim()] = this.parseValue(value);
+                    return acc;
+                }, {} as ParamMapType); // Initialize the accumulator with the correct type
+
+            Object.assign(data, paramMap);
+        }
     }
 }

@@ -3,7 +3,7 @@
   "displayName": "GAI Choy",
   "description": "G̲enerative A̲I̲ empowered, C̲ode H̲elper O̲n Y̲our side. Yet another Copilot for coding, with built-in integration capability with Azure OpenAI models or, local LLM such as CodeShell.",
   "publisher": "carusyte",
-  "version": "0.1.11",
+  "version": "0.2.0",
   "icon": "assets/logo.png",
   "pricing": "Free",
   "keywords": [
@@ -63,6 +63,7 @@
             "gpt-4",
             "gpt-4-32k"
           ],
+          "when": "config.GAIChoy.RunEnvForLLMs == 'Azure OpenAI'",
           "type": "string",
           "order": 4
         },
@@ -75,6 +76,7 @@
             "gpt-4",
             "gpt-4-32k"
           ],
+          "when": "config.GAIChoy.RunEnvForLLMs == 'Azure OpenAI'",
           "type": "string",
           "order": 5
         },
@@ -83,6 +85,7 @@
           "type": "null",
           "scope": "application",
           "markdownDescription": "[Set API Key](command:gaichoy.set_api_key)",
+          "when": "config.GAIChoy.RunEnvForLLMs == 'Azure OpenAI'",
           "order": 6
         },
         "GAIChoy.ApiVersion": {
@@ -93,16 +96,25 @@
             "2023-06-01-preview",
             "2023-07-01-preview",
             "2023-08-01-preview",
-            "2023-09-01-preview"
+            "2023-09-01-preview",
+            "2023-12-01-preview"
           ],
+          "when": "config.GAIChoy.RunEnvForLLMs == 'Azure OpenAI'",
           "type": "string",
           "order": 7
+        },
+        "GAIChoy.ApiParameters": {
+          "description": "The API parameters for Azure OpenAI. Format: key=value pairs delimited by semicolons.",
+          "default": "temperature=0.2",
+          "when": "config.GAIChoy.RunEnvForLLMs == 'Azure OpenAI'",
+          "type": "string",
+          "order": 8
         },
         "GAIChoy.AutoTriggerCompletion": {
           "description": "Whether or not to automatically trigger completion when typing.",
           "default": false,
           "type": "boolean",
-          "order": 8
+          "order": 9
         },
         "GAIChoy.AutoCompletionDelay": {
           "description": "The delay in seconds before automatic code completion triggers.",
@@ -113,7 +125,7 @@
             3
           ],
           "default": 2,
-          "order": 9
+          "order": 10
         },
         "GAIChoy.CompletionMaxTokens": {
           "description": "Maximum number of tokens for which suggestions will be displayed",
@@ -128,7 +140,7 @@
             4096
           ],
           "default": 64,
-          "order": 10
+          "order": 11
         },
         "GAIChoy.ChatMaxTokens": {
           "description": "Maximum number of tokens for which chat messages will be displayed",
@@ -142,20 +154,20 @@
             32768
           ],
           "default": 2048,
-          "order": 11
+          "order": 12
         },
         "GAIChoy.EnableDebugMessage": {
           "description": "Prints debug message to extension output.",
           "type": "boolean",
           "default": false,
-          "order": 12
+          "order": 13
         },
         "GAIChoy.ClearChatHistory": {
           "description": "Clear the chat history",
           "type": "null",
           "scope": "application",
           "markdownDescription": "[Clear chat history](command:gaichoy.clear_chat_history)",
-          "order": 13
+          "order": 14
         }
       }
     },
