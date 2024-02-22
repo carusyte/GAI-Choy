@@ -76,6 +76,13 @@ export class CodeShellCompletionProvider implements InlineCompletionItemProvider
             if (index === 0){
                 return line;
             }
+            // if the line contains leading whitespace with length equal or greater than indentation,
+            // that probably indicates the line has already been indented properly, and we can skip prepending
+            // excessive indentation in this case.
+            let leadingWhitespace = line.match(/^\s*/);
+            if (leadingWhitespace && leadingWhitespace[0].length >= indentation.length) {
+                return line;
+            }
             return indentation + line;
         });
         return indentedLines.join("\n");

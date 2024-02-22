@@ -31,6 +31,7 @@ export class AzureOAI {
         const model = workspace.getConfiguration("GAIChoy").get("ChatModel") as string;
         const api_version = workspace.getConfiguration("GAIChoy").get("ApiVersion") as string;
         const parameters = workspace.getConfiguration("GAIChoy").get("ApiParameters") as string;
+        const timeout = workspace.getConfiguration("GAIChoy").get("ApiTimeout") as number;
 
         // get API key from secret storage
         let api_key = await ExtensionResource.instance.getApiKey();
@@ -120,12 +121,32 @@ Expected response in JSON format:
 
         ExtensionResource.instance.debugMessage("request.data: " + data)
         const uri = "/openai/deployments/" + model + "/chat/completions?api-version=" + api_version
-        const response = await axiosInstance.post<OpenAiCompletionResponse>(serverAddress + uri, data, { headers: headers });
-        ExtensionResource.instance.debugMessage("response.data: " + response.data)
-        const content = response.data.choices[0].message.content;
-        ExtensionResource.instance.debugMessage("response.data.choices[0].message.content: " + content)
-        let contentJSON = JSON.parse(this.trimTripleBackticks(content));
-        return contentJSON.generated_code;
+        
+        try {
+            let startTime = Date.now();
+            let elapsedTime = 0;
+            do {
+                try {
+                    // adjust the timeout parameter at each round of retry. deduct by the elapsedTime.
+                    let postTimeout = Math.max(timeout * 1000 - elapsedTime, 0);
+                    const response = await axiosInstance.post<OpenAiCompletionResponse>(serverAddress + uri, data, { headers: headers, timeout: postTimeout });
+                    ExtensionResource.instance.debugMessage("response.data: " + response.data);
+                    const content = response.data.choices[0].message.content;
+                    ExtensionResource.instance.debugMessage("response.data.choices[0].message.content: " + content);
+                    let contentJSON = JSON.parse(this.trimTripleBackticks(content));
+                    return contentJSON.generated_code;
+                } catch (error) {
+                    ExtensionResource.instance.debugMessage("Error in code completion: " + error);
+                    if (Date.now() - startTime > timeout * 1000) {
+                        throw new Error('API timeout exceeded');
+                    }
+                }
+                elapsedTime = Date.now() - startTime;
+            } while (elapsedTime < timeout * 1000);
+        } catch (error) {
+            ExtensionResource.instance.debugMessage("Final Error: " + error);
+            throw error;
+        }
     }
 
     static trimTripleBackticks(str: string){

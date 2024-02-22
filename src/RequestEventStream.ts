@@ -3,6 +3,7 @@ import { Agent } from "https";
 import { workspace } from "vscode";
 import { FetchStream } from "./FetchStream";
 import { ChatItem } from "./ChatMemory";
+import { AzureOAI } from "./llm/AzureOAI";
 import AbortController from "abort-controller";
 import ExtensionResource from "./ExtensionResource";
 
@@ -19,6 +20,8 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
     const maxtokens = workspace.getConfiguration("GAIChoy").get("ChatMaxTokens") as number;
     const modelEnv = workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
     const allowSelfSignedCert = workspace.getConfiguration("GAIChoy").get("AllowSelfSignedCert") as boolean
+    const parameters = workspace.getConfiguration("GAIChoy").get("ApiParameters") as string;
+    const timeout = workspace.getConfiguration("GAIChoy").get("ApiTimeout") as number;
 
     // get API key from secret storage
     let api_key = await ExtensionResource.instance.getApiKey();
@@ -88,6 +91,9 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
             // "max_tokens": maxtokens,
             // "stop": ["|<end>|", "|end|", "<|endoftext|>", "## human"],
         };
+
+        AzureOAI.mergeParameters(body, parameters)
+
         for (let item of chatList) {
             if (item.humanMessage.content.length > 0) {
                 // @ts-ignore
@@ -133,6 +139,7 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
     new FetchStream({
         url: serverAddress + uri,
         requestInit: requestInit,
+        timeout: timeout,
         onmessage: msgCallback,
         ondone: doneCallback,
         onerror: errorCallback
