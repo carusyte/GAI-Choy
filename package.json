@@ -3,7 +3,7 @@
   "displayName": "GAI Choy",
   "description": "G̲enerative A̲I̲ empowered, C̲ode H̲elper O̲n Y̲our side. Yet another Copilot for coding, with built-in integration capability with Azure OpenAI models or, local LLM such as CodeShell.",
   "publisher": "carusyte",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "icon": "assets/logo.png",
   "pricing": "Free",
   "keywords": [
@@ -87,14 +87,15 @@
         },
         "GAIChoy.ApiVersion": {
           "description": "The API version for Azure OpenAI.",
-          "default": "2023-05-15",
+          "default": "2024-02-01",
           "enum": [
             "2023-05-15",
             "2023-06-01-preview",
             "2023-07-01-preview",
             "2023-08-01-preview",
             "2023-09-01-preview",
-            "2023-12-01-preview"
+            "2023-12-01-preview",
+            "2024-02-01"
           ],
           "type": "string",
           "order": 7
