@@ -114,12 +114,12 @@ Expected response in JSON format:
 
         this.mergeParameters(data, parameters)
 
-        // Conditionally add "response_format": {"type": "json_object"} to the data variable if api_version equals '2023-12-01-preview'.
-        data = api_version === '2023-12-01-preview' ? {
-             ...data, response_format: { type: 'json_object' } 
-             } : data
+        // Conditionally add "response_format": {"type": "json_object"} to the data variable if api_version is newer than '2023-12-01-preview'.
+        data = api_version >= '2023-12-01-preview' ? {
+            ...data, response_format: { type: 'json_object' }
+        } : data
 
-        ExtensionResource.instance.debugMessage("request.data: " + data)
+        ExtensionResource.instance.debugMessage("request.data: \n" + JSON.stringify(data))
         const uri = "/openai/deployments/" + model + "/chat/completions?api-version=" + api_version
         
         try {
@@ -151,7 +151,7 @@ Expected response in JSON format:
 
     static trimTripleBackticks(str: string){
         // if the str starts or ends with triple backticks, remove them
-        return str.replace(/^\`{3}|\`{3}$/g, '');
+        return str.replace(/^\`{3}(json)?|\`{3}$/g, '');
     }
 
     // Function to attempt converting a string to its appropriate type
