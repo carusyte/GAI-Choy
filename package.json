@@ -3,7 +3,7 @@
   "displayName": "GAI Choy",
   "description": "G̲enerative A̲I̲ empowered, C̲ode H̲elper O̲n Y̲our side. Yet another Copilot for coding, with built-in integration capability with Azure OpenAI models or, local LLM such as CodeShell.",
   "publisher": "carusyte",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "icon": "assets/logo.png",
   "pricing": "Free",
   "keywords": [
@@ -61,7 +61,8 @@
             "gpt-35-turbo",
             "gpt-35-turbo-16k",
             "gpt-4",
-            "gpt-4-32k"
+            "gpt-4-32k",
+            "gpt-4o"
           ],
           "type": "string",
           "order": 4
@@ -73,7 +74,8 @@
             "gpt-35-turbo",
             "gpt-35-turbo-16k",
             "gpt-4",
-            "gpt-4-32k"
+            "gpt-4-32k",
+            "gpt-4o"
           ],
           "type": "string",
           "order": 5
@@ -95,7 +97,8 @@
             "2023-08-01-preview",
             "2023-09-01-preview",
             "2023-12-01-preview",
-            "2024-02-01"
+            "2024-02-01",
+            "2024-05-01-preview"
           ],
           "type": "string",
           "order": 7
