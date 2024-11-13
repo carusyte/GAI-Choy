@@ -32,6 +32,7 @@ export class AzureOAI {
         const api_version = workspace.getConfiguration("GAIChoy").get("ApiVersion") as string;
         const parameters = workspace.getConfiguration("GAIChoy").get("ApiParameters") as string;
         const timeout = workspace.getConfiguration("GAIChoy").get("ApiTimeout") as number;
+        const jsonMode = workspace.getConfiguration("GAIChoy").get("JsonMode") as boolean;
 
         // get API key from secret storage
         let api_key = await ExtensionResource.instance.getApiKey();
@@ -49,8 +50,8 @@ export class AzureOAI {
             "temperature": 0.2,
             "messages": [
                 {
-                    "role": "system",
-                    "content": `Your role is an AI code generator.
+                    "role": model === "o1-preview" ? "user": "system",
+                    "content": `Your role is an AI code generator. Your name is "GAI Choy".
 Your task is to provide executable and functional code fragments AS-IS, based on the context provided by the user.
 The context and metadata of the code fragment will be provided by user in the following format, as surrounded by triple-backticks.
 Actual input from user will exclude the beginning and trailing triple-backticks:
@@ -115,9 +116,13 @@ Expected response in JSON format:
         this.mergeParameters(data, parameters)
 
         // Conditionally add "response_format": {"type": "json_object"} to the data variable if api_version is newer than '2023-12-01-preview'.
-        data = api_version >= '2023-12-01-preview' ? {
+        data = jsonMode ? {
             ...data, response_format: { type: 'json_object' }
         } : data
+
+        if (model === "o1-preview") {
+            delete data.temperature // this parameter is not supported by o1 model
+        }
 
         ExtensionResource.instance.debugMessage("request.data: \n" + JSON.stringify(data))
         const uri = "/openai/deployments/" + model + "/chat/completions?api-version=" + api_version
