@@ -33,6 +33,7 @@ export class AzureOAI {
         const parameters = workspace.getConfiguration("GAIChoy").get("ApiParameters") as string;
         const timeout = workspace.getConfiguration("GAIChoy").get("ApiTimeout") as number;
         const jsonMode = workspace.getConfiguration("GAIChoy").get("JsonMode") as boolean;
+        const reasoning_effort = workspace.getConfiguration("GAIChoy").get("ReasoningEffort") as string;
 
         // get API key from secret storage
         let api_key = await ExtensionResource.instance.getApiKey();
@@ -122,6 +123,7 @@ Expected response in JSON format:
 
         if (/^o1(-.*)?$/.test(model)) {
             delete data.temperature // this parameter is not supported by o1 model
+            data.reasoning_effort = reasoning_effort
         }
 
         ExtensionResource.instance.debugMessage("request.data: \n" + JSON.stringify(data))

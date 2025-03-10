@@ -21,6 +21,7 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
     const modelEnv = workspace.getConfiguration("GAIChoy").get("RunEnvForLLMs") as string;
     const allowSelfSignedCert = workspace.getConfiguration("GAIChoy").get("AllowSelfSignedCert") as boolean
     const parameters = workspace.getConfiguration("GAIChoy").get("ApiParameters") as string;
+    const reasoning_effort = workspace.getConfiguration("GAIChoy").get("ReasoningEffort") as string;
     const timeout = workspace.getConfiguration("GAIChoy").get("ApiTimeout") as number;
 
     // get API key from secret storage
@@ -69,7 +70,7 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
             temperature: 0.8,
             messages: [
                 {
-                    role: (/^o1(-.*)?$/.test(model)) ? "user" : "system",
+                    role: (/^o1(-.*)?$/.test(model)) ? "developer" : "system",
                     // "content": `
                     //     Your role is an AI pair programming assistant and technical consultant, a programming expert with strong coding skills.
                     //     Your task is to answer questions raised by the user as a developer.
@@ -84,7 +85,7 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
                     //     - Wait for the users' instruction, be interactive to understand more about user's problem, such that you can provide effective answer.
                     //     - If the response extends beyond token limit, respond in multiple responses/messages so your responses aren't cutoff. Tell the user to print next or continue.
                     //     `
-                    content: `You are an AI assistant named "GAI Choy" that helps people find information and satisfy their requests.`
+                    content: `You are an AI assistant named "GAI Choy" that helps people find information and satisfy their requests. Your response should be in markdown format.`
                 }
             ]
             // "stream": true,
@@ -97,6 +98,7 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
 
         if (/^o1(-.*)?$/.test(model)) {
            delete body.temperature // this parameter is not supported by o1 model
+           body.reasoning_effort = reasoning_effort
         }
 
         for (let item of chatList) {
