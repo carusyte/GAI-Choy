@@ -69,7 +69,7 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
             temperature: 0.8,
             messages: [
                 {
-                    role: model === "o1-preview" ? "user" : "system",
+                    role: (/^o1(-.*)?$/.test(model)) ? "user" : "system",
                     // "content": `
                     //     Your role is an AI pair programming assistant and technical consultant, a programming expert with strong coding skills.
                     //     Your task is to answer questions raised by the user as a developer.
@@ -95,7 +95,7 @@ export async function postEventStream(prompt: string, chatList: Array<ChatItem>,
 
         AzureOAI.mergeParameters(body, parameters)
 
-        if (model === "o1-preview") {
+        if (/^o1(-.*)?$/.test(model)) {
            delete body.temperature // this parameter is not supported by o1 model
         }
 

@@ -50,7 +50,7 @@ export class AzureOAI {
             "temperature": 0.2,
             "messages": [
                 {
-                    "role": model === "o1-preview" ? "user": "system",
+                    "role": (/^o1(-.*)?$/.test(model)) ? "user": "system",
                     "content": `Your role is an AI code generator. Your name is "GAI Choy".
 Your task is to provide executable and functional code fragments AS-IS, based on the context provided by the user.
 The context and metadata of the code fragment will be provided by user in the following format, as surrounded by triple-backticks.
@@ -120,7 +120,7 @@ Expected response in JSON format:
             ...data, response_format: { type: 'json_object' }
         } : data
 
-        if (model === "o1-preview") {
+        if (/^o1(-.*)?$/.test(model)) {
             delete data.temperature // this parameter is not supported by o1 model
         }
 
